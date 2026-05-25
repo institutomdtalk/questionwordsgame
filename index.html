@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Verb To Be — MD Talk Self-Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F5F0E8;
+    --bg-card:   #FDFAF5;
+    --bg-deep:   #EDE7D9;
+    --navy:      #0B1D3A;
+    --navy-mid:  #1A3358;
+    --navy-light:#2A4A70;
+    --gold:      #C4A45A;
+    --gold-light:#D4BA7A;
+    --gold-pale: #E8D9B0;
+    --text:      #1C2B3A;
+    --text-mid:  #3A4D60;
+    --text-muted:#7A8A98;
+    --border:    rgba(196,164,90,.22);
+    --success:   #3A9E72;
+    --error:     #B84C44;
+    --success-bg:rgba(58,158,114,.1);
+    --error-bg:  rgba(184,76,68,.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 52px;
+    background: linear-gradient(to bottom, rgba(245,240,232,.97) 60%, transparent);
+  }
+  .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; letter-spacing:.12em; color:var(--navy); text-decoration:none; }
+  .lesson-tag { font-size:.65rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--text-muted); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 88vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; position:relative; padding:120px 40px 80px;
+    background: radial-gradient(ellipse 70% 55% at 50% 45%, rgba(196,164,90,.11) 0%, transparent 70%);
+    overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(196,164,90,.18) 1px, transparent 1px);
+    background-size: 34px 34px; pointer-events:none; opacity:.55;
+  }
+  .geo { position:absolute; pointer-events:none; }
+  .geo-ring-1 { width:380px;height:380px;border:1px solid rgba(196,164,90,.15);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:geoFloat 8s ease-in-out infinite; }
+  .geo-ring-2 { width:580px;height:580px;border:1px solid rgba(196,164,90,.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:geoFloat 12s ease-in-out infinite reverse; }
+  .geo-diamond { width:52px;height:52px;border:1px solid rgba(196,164,90,.3);transform:rotate(45deg);top:18%;right:13%;animation:geoPulse 6s ease-in-out infinite; }
+  .geo-line { width:1px;height:110px;background:linear-gradient(to bottom,transparent,rgba(196,164,90,.4),transparent);bottom:16%;left:11%;animation:geoFloat 9s ease-in-out infinite 2s; }
+  @keyframes geoFloat { 0%,100%{transform:translateY(0) translate(-50%,-50%)} 50%{transform:translateY(-16px) translate(-50%,-50%)} }
+  @keyframes geoPulse { 0%,100%{opacity:.35;transform:rotate(45deg) scale(1)} 50%{opacity:.85;transform:rotate(45deg) scale(1.08)} }
+
+  .hero-overline { font-size:.65rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:20px; }
+  .hero-title { font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,5.2rem);font-weight:300;line-height:1.05;color:var(--navy);margin-bottom:12px; }
+  .hero-title em { font-style:italic;color:var(--gold); }
+  .hero-divider { width:44px;height:1px;background:var(--gold);margin:22px auto; }
+  .hero-desc { font-size:.92rem;font-weight:300;color:var(--text-mid);max-width:500px;line-height:1.8; }
+  .scroll-cta { margin-top:48px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text-muted);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;animation:scrollPulse 2.5s ease-in-out infinite;cursor:pointer; }
+  .scroll-cta::after { content:'';width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent); }
+  @keyframes scrollPulse { 0%,100%{opacity:.5;transform:translateY(0)} 50%{opacity:1;transform:translateY(6px)} }
+
+  /* ── SECTION LABELS ── */
+  .section-label { text-align:center;font-size:.65rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px; }
+  .section-label::after { content:'';display:block;width:30px;height:1px;background:var(--gold);margin:9px auto 0; }
+  .section-title { font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:300;text-align:center;margin-bottom:50px;color:var(--navy); }
+
+  /* ── SLIDES SECTION ── */
+  .slides-section { padding:100px 0 80px; }
+
+  .slider-outer { position:relative; max-width:880px; margin:0 auto; padding:0 68px; }
+
+  .slider-track-wrap {
+    overflow:hidden; border-radius:4px;
+    border:1px solid var(--border);
+    box-shadow: 0 4px 32px rgba(11,29,58,.07);
+  }
+  .slider-track { display:flex; transition:transform .46s cubic-bezier(.77,0,.18,1); will-change:transform; }
+
+  /* ── SLIDE CARD ── */
+  .slide-card {
+    min-width:100%;
+    background: var(--bg-card);
+    padding: 50px 54px 46px;
+    position:relative; overflow:hidden;
+  }
+  .slide-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent); }
+  .slide-num { position:absolute;top:22px;right:30px;font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:rgba(196,164,90,.12);line-height:1;pointer-events:none; }
+
+  .slide-tag { font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px; }
+  .slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:400;color:var(--navy);margin-bottom:26px;line-height:1.25; }
+  .slide-body { font-size:.87rem;font-weight:400;line-height:1.85;color:var(--text-mid); }
+  .slide-body p { margin-bottom:14px; }
+  .slide-body strong { color:var(--navy);font-weight:600; }
+  .slide-body em { color:var(--navy-mid);font-style:italic; }
+
+  /* TABLE */
+  .grammar-table { width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem; }
+  .grammar-table th { background:rgba(196,164,90,.12);color:var(--navy);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.64rem;padding:9px 14px;text-align:left;border-bottom:1px solid var(--border); }
+  .grammar-table td { padding:9px 14px;border-bottom:1px solid rgba(11,29,58,.06);color:var(--text-mid);font-weight:400; }
+  .grammar-table tr:last-child td { border-bottom:none; }
+  .grammar-table .hl { color:var(--navy);font-weight:600; }
+  .grammar-table tr:hover td { background:rgba(196,164,90,.05); }
+
+  /* BOXES */
+  .example-box { background:rgba(196,164,90,.08);border-left:2px solid var(--gold);border-radius:0 3px 3px 0;padding:13px 17px;margin:11px 0; }
+  .ex-en { color:var(--navy);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.97rem; }
+  .ex-pt { color:var(--text-muted);font-size:.75rem;margin-top:3px;font-weight:400; }
+
+  .note-box { background:rgba(196,164,90,.09);border:1px solid rgba(196,164,90,.3);border-radius:3px;padding:13px 17px;margin:15px 0;font-size:.79rem;color:var(--text-mid);line-height:1.7; }
+  .note-box strong { color:var(--navy); }
+
+  .formula { background:rgba(11,29,58,.05);border:1px solid var(--border);border-radius:3px;padding:13px 20px;margin:15px 0;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--navy);text-align:center;letter-spacing:.03em; }
+
+  /* ARROWS */
+  .arrow-btn {
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px;height:44px; border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--bg-card);
+    color:var(--navy); font-size:1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease; z-index:10;
+    box-shadow:0 2px 12px rgba(11,29,58,.08);
+  }
+  .arrow-btn:hover:not(:disabled) { background:var(--gold);color:#fff;border-color:var(--gold); }
+  .arrow-btn:disabled { opacity:.2;cursor:default; }
+  .arrow-btn.prev { left:8px; }
+  .arrow-btn.next { right:8px; }
+
+  /* DOTS + COUNTER */
+  .progress-row { display:flex;align-items:center;justify-content:center;gap:10px;margin-top:20px; }
+  .pdot { width:7px;height:7px;border-radius:50%;background:rgba(196,164,90,.3);cursor:pointer;transition:all .3s ease;border:none;padding:0;outline:none; }
+  .pdot.active { background:var(--gold);transform:scale(1.5); }
+  .slide-counter { text-align:center;margin-top:10px;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted); }
+
+  /* GO TO QUIZ */
+  .go-quiz-wrap { text-align:center;margin-top:38px; }
+  .go-quiz-btn { display:none;background:var(--navy);color:#fff;border:none;font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:14px 36px;border-radius:2px;cursor:pointer;transition:background .2s; }
+  .go-quiz-btn:hover { background:var(--navy-mid); }
+  .go-quiz-btn.show { display:inline-block;animation:revealUp .4s ease; }
+  @keyframes revealUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── QUIZ ── */
+  .quiz-section { padding:90px 0 110px; background:var(--bg-deep); }
+  .quiz-wrapper { max-width:740px;margin:0 auto;padding:0 24px; }
+
+  .quiz-card {
+    background:var(--bg-card);
+    border:1px solid var(--border); border-radius:4px;
+    padding:38px 46px; margin-bottom:20px;
+    position:relative; overflow:hidden;
+    box-shadow:0 2px 20px rgba(11,29,58,.06);
+    opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;
+  }
+  .quiz-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent); }
+  .quiz-card.visible { opacity:1;transform:translateY(0); }
+
+  .q-number { font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
+  .q-text { font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-weight:400;line-height:1.55;color:var(--navy);margin-bottom:24px; }
+  .q-blank { display:inline-block;border-bottom:1.5px solid var(--gold);min-width:60px;text-align:center;color:var(--gold);font-style:italic; }
+
+  .options-grid { display:grid;grid-template-columns:1fr 1fr;gap:9px; }
+  .option-btn {
+    background:rgba(11,29,58,.03);border:1px solid rgba(11,29,58,.1);border-radius:3px;
+    padding:11px 15px;color:var(--text-mid);
+    font-family:'Raleway',sans-serif;font-size:.82rem;font-weight:400;
+    text-align:left;cursor:pointer;transition:all .18s ease;
+    display:flex;align-items:center;gap:10px;
+  }
+  .option-btn:hover:not(:disabled) { background:rgba(196,164,90,.1);border-color:var(--gold);color:var(--navy); }
+  .opt-letter { display:flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;border-radius:50%;border:1px solid var(--border);font-size:.68rem;font-weight:700;color:var(--gold); }
+  .option-btn.correct { background:var(--success-bg);border-color:var(--success);color:var(--text); }
+  .option-btn.correct .opt-letter { border-color:var(--success);color:var(--success); }
+  .option-btn.wrong { background:var(--error-bg);border-color:var(--error);color:var(--text-muted); }
+  .option-btn.wrong .opt-letter { border-color:var(--error);color:var(--error); }
+  .option-btn:disabled { cursor:default; }
+
+  .feedback { display:none;margin-top:16px;padding:12px 16px;border-radius:3px;font-size:.8rem;font-weight:400;line-height:1.65; }
+  .feedback.show { display:block; }
+  .feedback.correct-fb { background:var(--success-bg);border:1px solid rgba(58,158,114,.25);color:#2A7A56; }
+  .feedback.wrong-fb { background:var(--error-bg);border:1px solid rgba(184,76,68,.22);color:#8B3530; }
+
+  /* SCORE */
+  .score-panel { display:none;text-align:center;padding:56px 40px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;margin-top:28px;box-shadow:0 4px 28px rgba(11,29,58,.08); }
+  .score-panel.show { display:block; }
+  .score-label { font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px; }
+  .score-number { font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:var(--navy);line-height:1;margin-bottom:4px; }
+  .score-denom { font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--text-muted);margin-bottom:22px; }
+  .score-msg { font-size:.87rem;font-weight:400;color:var(--text-mid);line-height:1.75;max-width:380px;margin:0 auto 28px; }
+  .retry-btn { background:transparent;border:1px solid var(--border);color:var(--navy);font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:12px 30px;cursor:pointer;border-radius:2px;transition:all .2s; }
+  .retry-btn:hover { background:var(--navy);color:#fff;border-color:var(--navy); }
+
+  /* FOOTER */
+  footer { border-top:1px solid var(--border);padding:34px 52px;display:flex;align-items:center;justify-content:space-between;background:var(--bg); }
+  .brand-f { font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--navy);font-weight:600;letter-spacing:.1em; }
+  .copy { font-size:.65rem;color:var(--text-muted);letter-spacing:.1em; }
+
+  [data-reveal] { opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease; }
+  [data-reveal].visible { opacity:1;transform:translateY(0); }
+
+  @media(max-width:640px){
+    .slider-outer{padding:0 48px;}
+    .slide-card{padding:30px 22px 26px;}
+    .quiz-card{padding:30px 22px;}
+    .options-grid{grid-template-columns:1fr;}
+    .site-header{padding:16px 24px;}
+    footer{flex-direction:column;gap:10px;text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="#">MD Talk</a>
+  <span class="lesson-tag">Grammar · Self-Study</span>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="geo geo-ring-1"></div>
+  <div class="geo geo-ring-2"></div>
+  <div class="geo geo-diamond"></div>
+  <div class="geo geo-line"></div>
+  <p class="hero-overline">Foundation Grammar</p>
+  <h1 class="hero-title">The Verb <em>To Be</em></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-desc">Study the slides at your own pace, then test yourself with interactive multiple-choice exercises.</p>
+  <div class="scroll-cta" onclick="document.querySelector('.slides-section').scrollIntoView({behavior:'smooth'})">Begin</div>
+</section>
+
+<!-- SLIDES -->
+<section class="slides-section">
+  <p class="section-label" data-reveal>Explanation</p>
+  <h2 class="section-title" data-reveal>Study the slides at your own pace</h2>
+
+  <div class="slider-outer" data-reveal>
+    <button class="arrow-btn prev" id="prev-btn" disabled>&#8592;</button>
+    <button class="arrow-btn next" id="next-btn">&#8594;</button>
+
+    <div class="slider-track-wrap">
+      <div class="slider-track" id="slider-track">
+
+        <!-- SLIDE 1 -->
+        <div class="slide-card">
+          <span class="slide-num">01</span>
+          <p class="slide-tag">Introduction</p>
+          <h3 class="slide-title">What is the verb <em>to be</em>?</h3>
+          <div class="slide-body">
+            <p>The verb <strong>to be</strong> is the most important verb in English. It is used to describe <strong>identity, professions, nationalities, characteristics, states,</strong> and <strong>locations</strong>.</p>
+            <p>In the present simple, it has <strong>three forms</strong> that change according to the subject:</p>
+            <table class="grammar-table">
+              <thead><tr><th>Subject</th><th>Form</th><th>Contraction</th></tr></thead>
+              <tbody>
+                <tr><td>I</td><td class="hl">am</td><td>'m &nbsp;→&nbsp; I'm</td></tr>
+                <tr><td>You</td><td class="hl">are</td><td>'re &nbsp;→&nbsp; You're</td></tr>
+                <tr><td>He / She / It</td><td class="hl">is</td><td>'s &nbsp;→&nbsp; She's / He's</td></tr>
+                <tr><td>We / You / They</td><td class="hl">are</td><td>'re &nbsp;→&nbsp; We're / They're</td></tr>
+              </tbody>
+            </table>
+            <div class="note-box"><strong>Note:</strong> Contractions are very common in spoken English and informal writing. In formal contexts, the full form is preferred.</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide-card">
+          <span class="slide-num">02</span>
+          <p class="slide-tag">Affirmative Form</p>
+          <h3 class="slide-title">Affirmative Sentences</h3>
+          <div class="slide-body">
+            <div class="formula">Subject &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; complement</div>
+            <p>In affirmative sentences, the verb <strong>to be</strong> follows the subject directly. No other verb is needed.</p>
+            <div class="example-box"><div class="ex-en">I am a teacher.</div><div class="ex-pt">Eu sou professor(a).</div></div>
+            <div class="example-box"><div class="ex-en">She is very talented.</div><div class="ex-pt">Ela é muito talentosa.</div></div>
+            <div class="example-box"><div class="ex-en">They are from Brazil.</div><div class="ex-pt">Eles são do Brasil.</div></div>
+            <div class="example-box"><div class="ex-en">The book is on the table.</div><div class="ex-pt">O livro está sobre a mesa.</div></div>
+            <p>Notice how <em>is</em> is used with <strong>he, she, it</strong> — all singular third-person subjects.</p>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="slide-card">
+          <span class="slide-num">03</span>
+          <p class="slide-tag">Negative Form</p>
+          <h3 class="slide-title">Negative Sentences</h3>
+          <div class="slide-body">
+            <div class="formula">Subject &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; <strong>not</strong> &nbsp;+&nbsp; complement</div>
+            <p>To form the negative, simply add <strong>not</strong> after the verb <em>to be</em>.</p>
+            <table class="grammar-table">
+              <thead><tr><th>Full Form</th><th>Contraction</th></tr></thead>
+              <tbody>
+                <tr><td>I am not</td><td class="hl">I'm not</td></tr>
+                <tr><td>You are not</td><td class="hl">You aren't &nbsp;/&nbsp; You're not</td></tr>
+                <tr><td>He / She / It is not</td><td class="hl">He isn't &nbsp;/&nbsp; She's not</td></tr>
+                <tr><td>We / They are not</td><td class="hl">We aren't &nbsp;/&nbsp; They're not</td></tr>
+              </tbody>
+            </table>
+            <div class="example-box"><div class="ex-en">I'm not ready yet.</div><div class="ex-pt">Eu ainda não estou pronto(a).</div></div>
+            <div class="example-box"><div class="ex-en">They aren't at home.</div><div class="ex-pt">Eles não estão em casa.</div></div>
+            <div class="note-box"><strong>Attention:</strong> <em>I am not</em> has only one contraction: <em>I'm not</em>. The form <em>amn't</em> does not exist in standard English.</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4 -->
+        <div class="slide-card">
+          <span class="slide-num">04</span>
+          <p class="slide-tag">Interrogative Form</p>
+          <h3 class="slide-title">Questions with <em>To Be</em></h3>
+          <div class="slide-body">
+            <div class="formula">Am / Is / Are &nbsp;+&nbsp; Subject &nbsp;+&nbsp; complement &nbsp;?</div>
+            <p>In yes/no questions, the verb <strong>to be</strong> moves <em>before</em> the subject. No auxiliary verb is needed.</p>
+            <div class="example-box"><div class="ex-en">Are you ready?</div><div class="ex-pt">Você está pronto(a)?</div></div>
+            <div class="example-box"><div class="ex-en">Is she your sister?</div><div class="ex-pt">Ela é sua irmã?</div></div>
+            <p>For <strong>WH-questions</strong>, the question word comes first:</p>
+            <div class="formula">WH-word &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; Subject &nbsp;?</div>
+            <div class="example-box"><div class="ex-en">Where are you from?</div><div class="ex-pt">De onde você é?</div></div>
+            <div class="example-box"><div class="ex-en">What is your name?</div><div class="ex-pt">Qual é o seu nome?</div></div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5 -->
+        <div class="slide-card">
+          <span class="slide-num">05</span>
+          <p class="slide-tag">Key Uses</p>
+          <h3 class="slide-title">When to Use <em>To Be</em></h3>
+          <div class="slide-body">
+            <table class="grammar-table">
+              <thead><tr><th>Use</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td>Identity / Name</td><td class="hl">I am Maria.</td></tr>
+                <tr><td>Profession</td><td class="hl">He is an engineer.</td></tr>
+                <tr><td>Nationality / Origin</td><td class="hl">She is Italian.</td></tr>
+                <tr><td>Characteristic</td><td class="hl">The film is boring.</td></tr>
+                <tr><td>State / Feeling</td><td class="hl">We are tired.</td></tr>
+                <tr><td>Location</td><td class="hl">The keys are on the desk.</td></tr>
+                <tr><td>Age</td><td class="hl">My brother is 25 years old.</td></tr>
+              </tbody>
+            </table>
+            <div class="note-box"><strong>Remember:</strong> In Portuguese, <em>ser</em> and <em>estar</em> are two separate verbs. In English, <em>to be</em> covers both — so the choice is always about <strong>which form</strong> to use, not which verb.</div>
+          </div>
+        </div>
+
+      </div><!-- /slider-track -->
+    </div>
+
+    <div class="progress-row" id="progress-dots"></div>
+    <div class="slide-counter" id="slide-counter">1 / 5</div>
+  </div>
+
+  <div class="go-quiz-wrap">
+    <button class="go-quiz-btn" id="go-quiz-btn"
+      onclick="document.querySelector('.quiz-section').scrollIntoView({behavior:'smooth'})">
+      Go to Exercise ↓
+    </button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section">
+  <p class="section-label" data-reveal>Practice</p>
+  <h2 class="section-title" data-reveal>Multiple-Choice Exercises</h2>
+  <div class="quiz-wrapper" id="quiz-container"></div>
+  <div class="score-panel" id="score-panel">
+    <p class="score-label">Your Score</p>
+    <div class="score-number" id="score-num">0</div>
+    <div class="score-denom" id="score-denom">out of 8</div>
+    <p class="score-msg" id="score-msg"></p>
+    <button class="retry-btn" onclick="resetQuiz()">Try Again</button>
+  </div>
+</section>
+
+<footer>
+  <span class="brand-f">Instituto MD Talk</span>
+  <span class="copy">Grammar · Self-Study Series</span>
+</footer>
+
+<script>
+/* ═══ SLIDER ═══ */
+const TOTAL = 5;
+let current = 0;
+const track   = document.getElementById('slider-track');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const counter = document.getElementById('slide-counter');
+const goQuiz  = document.getElementById('go-quiz-btn');
+const dotsWrap= document.getElementById('progress-dots');
+
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('button');
+  d.className = 'pdot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', () => goTo(i));
+  dotsWrap.appendChild(d);
+}
+
+function goTo(n) {
+  n = Math.max(0, Math.min(TOTAL - 1, n));
+  current = n;
+  track.style.transform = `translateX(-${current * 100}%)`;
+  document.querySelectorAll('.pdot').forEach((d,i) => d.classList.toggle('active', i === current));
+  counter.textContent = `${current + 1} / ${TOTAL}`;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === TOTAL - 1;
+  if (current === TOTAL - 1) goQuiz.classList.add('show');
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') goTo(current - 1);
+  if (e.key === 'ArrowRight') goTo(current + 1);
+});
+let tx = 0;
+track.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, {passive:true});
+track.addEventListener('touchend',   e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+});
+
+/* ═══ QUIZ ═══ */
+const questions = [
+  { text:'She _____ very happy today.', options:['am','is','are','be'], correct:1,
+    feedback:'<strong>Correct!</strong> We use <em>is</em> with he, she, and it.',
+    wrongFeedback:'The correct answer is <strong>is</strong>. With <em>she</em>, always use <em>is</em>.' },
+  { text:'My parents _____ at home right now.', options:['am','is','are','was'], correct:2,
+    feedback:'<strong>Correct!</strong> <em>Are</em> is used with plural subjects. "My parents" = they.',
+    wrongFeedback:'The correct answer is <strong>are</strong>. "My parents" is plural — use <em>are</em>.' },
+  { text:'"_____ you from São Paulo?"', options:['Am','Is','Are','Do'], correct:2,
+    feedback:'<strong>Correct!</strong> In questions with <em>you</em>, we use <em>Are you…?</em>',
+    wrongFeedback:'The correct answer is <strong>Are</strong>. With <em>you</em>, the question form is <em>Are you…?</em>' },
+  { text:'The weather _____ not very good today.', options:["isn't","aren't","am not","doesn't"], correct:0,
+    feedback:'<strong>Correct!</strong> "The weather" is singular — we use <em>isn\'t</em> (is not).',
+    wrongFeedback:'The correct answer is <strong>isn\'t</strong>. "The weather" is singular → <em>is not / isn\'t</em>.' },
+  { text:'I _____ so tired after the long trip.', options:['is','are','am','be'], correct:2,
+    feedback:'<strong>Correct!</strong> With <em>I</em>, we always use <em>am</em>.',
+    wrongFeedback:'The correct answer is <strong>am</strong>. With <em>I</em>, the only form is <em>am</em>.' },
+  { text:'"Where _____ the nearest supermarket?"', options:['am','is','are','does'], correct:1,
+    feedback:'<strong>Correct!</strong> "The nearest supermarket" is singular — we use <em>is</em> to ask about location.',
+    wrongFeedback:'The correct answer is <strong>is</strong>. Singular noun → <em>Where is…?</em>' },
+  { text:'We _____ really excited about the trip.', options:['is','am','are','was'], correct:2,
+    feedback:'<strong>Correct!</strong> <em>We</em> always takes <em>are</em>.',
+    wrongFeedback:'The correct answer is <strong>are</strong>. With <em>we</em>, always use <em>are</em>.' },
+  { text:'The children _____ in the garden playing football.', options:['is','am','are','be'], correct:2,
+    feedback:'<strong>Correct!</strong> "The children" is plural — <em>are</em> is required.',
+    wrongFeedback:'The correct answer is <strong>are</strong>. "The children" is plural → <em>are</em>.' }
+];
+
+let answered, score;
+
+function buildQuiz() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  answered = new Array(questions.length).fill(false);
+  score = 0;
+  document.getElementById('score-panel').classList.remove('show');
+  const letters = ['A','B','C','D'];
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    const optsHTML = q.options.map((opt, oi) =>
+      `<button class="option-btn" onclick="pick(${qi},${oi})" id="o-${qi}-${oi}">
+        <span class="opt-letter">${letters[oi]}</span>${opt}
+      </button>`).join('');
+    card.innerHTML = `
+      <p class="q-number">Question ${qi+1} of ${questions.length}</p>
+      <p class="q-text">${q.text.replace('_____','<span class="q-blank">_____</span>')}</p>
+      <div class="options-grid">${optsHTML}</div>
+      <div class="feedback" id="fb-${qi}"></div>`;
+    c.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), qi * 75);
+  });
+}
+
+function pick(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  const q = questions[qi];
+  for (let i=0;i<4;i++){ const b=document.getElementById(`o-${qi}-${i}`); if(b) b.disabled=true; }
+  const fb = document.getElementById('fb-'+qi);
+  if (oi === q.correct) {
+    score++;
+    document.getElementById(`o-${qi}-${oi}`).classList.add('correct');
+    fb.className='feedback show correct-fb'; fb.innerHTML=q.feedback;
+  } else {
+    document.getElementById(`o-${qi}-${oi}`).classList.add('wrong');
+    document.getElementById(`o-${qi}-${q.correct}`).classList.add('correct');
+    fb.className='feedback show wrong-fb'; fb.innerHTML=q.wrongFeedback;
+  }
+  if (answered.every(Boolean)) setTimeout(showScore, 700);
+}
+
+function showScore() {
+  const panel = document.getElementById('score-panel');
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('score-denom').textContent = `out of ${questions.length}`;
+  const pct = score / questions.length;
+  let msg = pct === 1
+    ? 'Perfect score! You have an excellent command of the verb <em>to be</em>.'
+    : pct >= .75
+    ? 'Well done! Review the items you missed and try once more.'
+    : pct >= .5
+    ? 'Good effort. Go back through the slides and focus on subject-verb agreement.'
+    : 'Keep going. Review the slides carefully and pay attention to each subject pronoun.';
+  document.getElementById('score-msg').innerHTML = msg;
+  panel.classList.add('show');
+  panel.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetQuiz() {
+  buildQuiz();
+  document.getElementById('quiz-container').scrollIntoView({behavior:'smooth'});
+}
+
+buildQuiz();
+
+/* SCROLL REVEAL */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} });
+},{threshold:.1});
+document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
