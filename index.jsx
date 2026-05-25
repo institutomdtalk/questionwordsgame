@@ -1,671 +1,1300 @@
-import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Sparkles, RotateCcw, BookOpen, Brain, Target, CheckCircle2, XCircle, Lock, Unlock, GraduationCap, Zap } from "lucide-react";
-
-const questionWords = [
-  {
-    word: "WHAT",
-    asks: "information, things, actions or ideas",
-    pt: "o quê / qual",
-    clue: "Think: object, idea, activity.",
-    example: "What do you do after class?",
-  },
-  {
-    word: "WHERE",
-    asks: "place or location",
-    pt: "onde",
-    clue: "Think: place, room, city, hospital, clinic.",
-    example: "Where does the patient live?",
-  },
-  {
-    word: "WHEN",
-    asks: "time, date or moment",
-    pt: "quando",
-    clue: "Think: clock, calendar, schedule.",
-    example: "When is your next appointment?",
-  },
-  {
-    word: "WHY",
-    asks: "reason or cause",
-    pt: "por que",
-    clue: "Think: reason, explanation, cause.",
-    example: "Why did you choose this specialty?",
-  },
-  {
-    word: "WHO",
-    asks: "a person",
-    pt: "quem",
-    clue: "Think: person, doctor, student, patient.",
-    example: "Who is your English teacher?",
-  },
-  {
-    word: "WHOSE",
-    asks: "possession or ownership",
-    pt: "de quem",
-    clue: "Think: owner, belonging, possession.",
-    example: "Whose notebook is this?",
-  },
-  {
-    word: "WHICH",
-    asks: "choice from a limited group",
-    pt: "qual / quais",
-    clue: "Think: option A or option B.",
-    example: "Which option is better for you?",
-  },
-  {
-    word: "HOW",
-    asks: "manner, method, condition or quality",
-    pt: "como",
-    clue: "Think: process, condition, way.",
-    example: "How are you feeling today?",
-  },
-  {
-    word: "HOW MANY",
-    asks: "quantity with countable nouns",
-    pt: "quantos / quantas",
-    clue: "Think: numbers + plural countable things.",
-    example: "How many classes do you have this week?",
-  },
-  {
-    word: "HOW MUCH",
-    asks: "quantity, price or uncountable nouns",
-    pt: "quanto / quanta / quanto custa",
-    clue: "Think: money, water, time as amount, information.",
-    example: "How much time do you need?",
-  },
-  {
-    word: "HOW LONG",
-    asks: "duration or length of time",
-    pt: "por quanto tempo / quanto tempo",
-    clue: "Think: duration from start to finish.",
-    example: "How long have you studied English?",
-  },
-  {
-    word: "HOW OFTEN",
-    asks: "frequency",
-    pt: "com que frequência",
-    clue: "Think: always, usually, sometimes, once a week.",
-    example: "How often do you review vocabulary?",
-  },
-  {
-    word: "HOW FAR",
-    asks: "distance",
-    pt: "quão longe / qual a distância",
-    clue: "Think: kilometers, distance, location gap.",
-    example: "How far is the hospital from here?",
-  },
-  {
-    word: "HOW OLD",
-    asks: "age",
-    pt: "quantos anos",
-    clue: "Think: age of a person, building, object, or institution.",
-    example: "How old is your son?",
-  },
-];
-
-const missions = [
-  {
-    id: 1,
-    level: "Foundation",
-    prompt: "____ is your name?",
-    answer: "WHAT",
-    options: ["WHAT", "WHO", "WHERE", "WHEN"],
-    explanation: "Use WHAT to ask for information, names, things or ideas.",
-    translation: "Qual é o seu nome?",
-  },
-  {
-    id: 2,
-    level: "Foundation",
-    prompt: "____ are you from?",
-    answer: "WHERE",
-    options: ["WHEN", "WHERE", "WHY", "WHOSE"],
-    explanation: "Use WHERE to ask about place or origin.",
-    translation: "De onde você é?",
-  },
-  {
-    id: 3,
-    level: "Foundation",
-    prompt: "____ is your appointment?",
-    answer: "WHEN",
-    options: ["WHEN", "WHY", "WHICH", "HOW"],
-    explanation: "Use WHEN to ask about time, date or moment.",
-    translation: "Quando é sua consulta?",
-  },
-  {
-    id: 4,
-    level: "Foundation",
-    prompt: "____ is your favorite doctor?",
-    answer: "WHO",
-    options: ["WHO", "WHAT", "WHOSE", "WHERE"],
-    explanation: "Use WHO when the answer is a person.",
-    translation: "Quem é seu médico favorito?",
-  },
-  {
-    id: 5,
-    level: "Meaning",
-    prompt: "____ did you cancel the class?",
-    answer: "WHY",
-    options: ["WHY", "WHEN", "WHERE", "WHICH"],
-    explanation: "Use WHY to ask for the reason or cause of something.",
-    translation: "Por que você cancelou a aula?",
-  },
-  {
-    id: 6,
-    level: "Meaning",
-    prompt: "____ phone is ringing?",
-    answer: "WHOSE",
-    options: ["WHO", "WHOSE", "WHICH", "WHAT"],
-    explanation: "Use WHOSE to ask about possession or ownership.",
-    translation: "De quem é o telefone que está tocando?",
-  },
-  {
-    id: 7,
-    level: "Meaning",
-    prompt: "____ course do you prefer: Medical English or Business English?",
-    answer: "WHICH",
-    options: ["WHAT", "WHICH", "WHY", "HOW"],
-    explanation: "Use WHICH when there is a limited set of options.",
-    translation: "Qual curso você prefere: inglês médico ou inglês para negócios?",
-  },
-  {
-    id: 8,
-    level: "Meaning",
-    prompt: "____ are you feeling after the night shift?",
-    answer: "HOW",
-    options: ["HOW", "WHAT", "WHERE", "WHO"],
-    explanation: "Use HOW to ask about condition, manner, process or quality.",
-    translation: "Como você está se sentindo depois do plantão noturno?",
-  },
-  {
-    id: 9,
-    level: "Precision",
-    prompt: "____ patients did you see today?",
-    answer: "HOW MANY",
-    options: ["HOW MUCH", "HOW MANY", "HOW OFTEN", "HOW LONG"],
-    explanation: "Use HOW MANY with countable plural nouns, such as patients, books, classes, exams.",
-    translation: "Quantos pacientes você atendeu hoje?",
-  },
-  {
-    id: 10,
-    level: "Precision",
-    prompt: "____ water do you drink every day?",
-    answer: "HOW MUCH",
-    options: ["HOW MANY", "HOW MUCH", "HOW FAR", "HOW OLD"],
-    explanation: "Use HOW MUCH with uncountable nouns, prices and amounts.",
-    translation: "Quanta água você bebe todos os dias?",
-  },
-  {
-    id: 11,
-    level: "Precision",
-    prompt: "____ have you worked at this hospital?",
-    answer: "HOW LONG",
-    options: ["HOW OFTEN", "HOW LONG", "HOW FAR", "HOW MUCH"],
-    explanation: "Use HOW LONG to ask about duration.",
-    translation: "Há quanto tempo você trabalha neste hospital?",
-  },
-  {
-    id: 12,
-    level: "Precision",
-    prompt: "____ do you practice English?",
-    answer: "HOW OFTEN",
-    options: ["HOW OLD", "HOW OFTEN", "HOW FAR", "HOW LONG"],
-    explanation: "Use HOW OFTEN to ask about frequency.",
-    translation: "Com que frequência você pratica inglês?",
-  },
-  {
-    id: 13,
-    level: "Challenge",
-    prompt: "____ is your clinic from the airport?",
-    answer: "HOW FAR",
-    options: ["HOW FAR", "HOW LONG", "WHERE", "WHEN"],
-    explanation: "Use HOW FAR to ask about distance.",
-    translation: "A que distância sua clínica fica do aeroporto?",
-  },
-  {
-    id: 14,
-    level: "Challenge",
-    prompt: "____ is your daughter? She looks very young.",
-    answer: "HOW OLD",
-    options: ["HOW LONG", "HOW MANY", "HOW OLD", "WHOSE"],
-    explanation: "Use HOW OLD to ask about age.",
-    translation: "Quantos anos tem sua filha? Ela parece muito jovem.",
-  },
-  {
-    id: 15,
-    level: "Challenge",
-    prompt: "____ did the patient arrive late? Because of traffic.",
-    answer: "WHY",
-    options: ["WHEN", "WHY", "WHERE", "HOW MANY"],
-    explanation: "The answer gives a reason, so the correct question word is WHY.",
-    translation: "Por que o paciente chegou atrasado? Por causa do trânsito.",
-  },
-  {
-    id: 16,
-    level: "Challenge",
-    prompt: "____ document should I sign, this one or that one?",
-    answer: "WHICH",
-    options: ["WHOSE", "WHICH", "WHAT", "WHY"],
-    explanation: "There are two specific options, so WHICH is more precise than WHAT.",
-    translation: "Qual documento eu devo assinar, este ou aquele?",
-  },
-];
-
-const badgeRules = [
-  { name: "First Spark", icon: Sparkles, test: (s) => s.totalAnswered >= 1, text: "Answered your first mission" },
-  { name: "Memory Streak", icon: Zap, test: (s) => s.bestStreak >= 3, text: "Reached a 3-answer streak" },
-  { name: "Precision Mode", icon: Target, test: (s) => s.correct >= 8, text: "Got 8 answers correct" },
-  { name: "Question Master", icon: Trophy, test: (s) => s.correct === missions.length, text: "Perfect score" },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function shuffle(array) {
-  return [...array].sort(() => Math.random() - 0.5);
-}
-
-export default function QuestionWordsMemoryGame() {
-  const [started, setStarted] = useState(false);
-  const [rounds, setRounds] = useState(() => missions);
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [answered, setAnswered] = useState(false);
-  const [correct, setCorrect] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [mistakes, setMistakes] = useState([]);
-  const [studyOpen, setStudyOpen] = useState(false);
-  const [mode, setMode] = useState("guided");
-
-  const current = rounds[index];
-  const totalAnswered = answered ? index + 1 : index;
-  const score = correct * 100 + bestStreak * 20;
-  const progress = started ? ((index + (answered ? 1 : 0)) / rounds.length) * 100 : 0;
-  const isFinished = started && index >= rounds.length;
-
-  const stats = { correct, totalAnswered, bestStreak };
-  const unlockedBadges = badgeRules.filter((b) => b.test(stats));
-
-  const mastery = useMemo(() => {
-    if (!started) return 0;
-    return Math.round((correct / rounds.length) * 100);
-  }, [correct, rounds.length, started]);
-
-  const startGame = (gameMode = "guided") => {
-    setMode(gameMode);
-    setRounds(gameMode === "challenge" ? shuffle(missions) : missions);
-    setStarted(true);
-    setIndex(0);
-    setSelected(null);
-    setAnswered(false);
-    setCorrect(0);
-    setStreak(0);
-    setBestStreak(0);
-    setMistakes([]);
-  };
-
-  const resetGame = () => {
-    setStarted(false);
-    setIndex(0);
-    setSelected(null);
-    setAnswered(false);
-    setCorrect(0);
-    setStreak(0);
-    setBestStreak(0);
-    setMistakes([]);
-    setRounds(missions);
-  };
-
-  const chooseAnswer = (option) => {
-    if (answered) return;
-    setSelected(option);
-    setAnswered(true);
-
-    const isCorrect = option === current.answer;
-    if (isCorrect) {
-      const nextStreak = streak + 1;
-      setCorrect((prev) => prev + 1);
-      setStreak(nextStreak);
-      setBestStreak((prev) => Math.max(prev, nextStreak));
-    } else {
-      setMistakes((prev) => [...prev, { ...current, selected: option }]);
-      setStreak(0);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question Words Memory Game | MD Talk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0B1D3A;
+      --navy-deep: #050D1A;
+      --navy-mid: #0F2645;
+      --gold: #C4A45A;
+      --gold-light: #D4BA7A;
+      --off-white: #F6F4EF;
+      --text-body: #E8E2D8;
+      --text-muted: #A8A39D;
+      --green: #88D498;
+      --red: #E78A8A;
+      --border: rgba(246, 244, 239, 0.14);
+      --glass: rgba(255,255,255,0.055);
+      --glass-strong: rgba(255,255,255,0.095);
     }
-  };
 
-  const nextRound = () => {
-    setSelected(null);
-    setAnswered(false);
-    setIndex((prev) => prev + 1);
-  };
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  const optionState = (option) => {
-    if (!answered) return "idle";
-    if (option === current.answer) return "correct";
-    if (option === selected && selected !== current.answer) return "wrong";
-    return "muted";
-  };
+    body {
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      color: var(--off-white);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(196, 164, 90, 0.24), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(80, 139, 204, 0.17), transparent 28%),
+        linear-gradient(135deg, #050D1A 0%, #0B1D3A 48%, #06101E 100%);
+      overflow-x: hidden;
+    }
 
-  return (
-    <main className="min-h-screen w-full overflow-hidden bg-[#07111f] text-slate-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(209,181,106,0.22),transparent_34%),radial-gradient(circle_at_80%_20%,rgba(74,144,226,0.18),transparent_30%),linear-gradient(135deg,#07111f,#0b1d34_45%,#06111d)]" />
-      <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-amber-200/10 blur-3xl" />
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-8 lg:px-10">
-        <header className="mb-8 flex flex-col gap-4 border-b border-white/10 pb-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <div className="mb-2 inline-flex items-center gap-2 border border-amber-300/30 bg-amber-200/10 px-3 py-1 text-xs uppercase tracking-[0.32em] text-amber-100">
-              <GraduationCap className="h-3.5 w-3.5" /> MD Talk Memory Game
-            </div>
-            <h1 className="font-serif text-4xl leading-tight text-white md:text-6xl">Question Words</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
-              A memorization game designed to help students recognize, choose and internalize English question words through fast decisions, explanations and recall cards.
-            </p>
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 80%);
+      pointer-events: none;
+    }
+
+    .app {
+      position: relative;
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 46px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(196,164,90,0.38);
+      background: rgba(196,164,90,0.10);
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 0.9;
+    }
+
+    .subtitle {
+      max-width: 710px;
+      margin-top: 14px;
+      color: rgba(246,244,239,0.72);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .score-panel {
+      min-width: 390px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      padding: 16px 12px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold-light);
+      font-size: 26px;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeUp .45s ease both;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .intro-grid {
+      min-height: 630px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .hero-card, .game-card, .side-card, .final-card, .review-card {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+    }
+
+    .hero-card {
+      padding: clamp(30px, 5vw, 56px);
+    }
+
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(196,164,90,0.35);
+      background: rgba(196,164,90,0.10);
+      color: var(--gold-light);
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+
+    .hero-card h2 {
+      font-size: clamp(40px, 5.8vw, 72px);
+      line-height: 0.95;
+    }
+
+    .hero-card p {
+      margin-top: 20px;
+      color: rgba(246,244,239,0.73);
+      line-height: 1.9;
+      font-size: 16px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 0;
+    }
+
+    .btn {
+      border: 1px solid rgba(196,164,90,0.45);
+      padding: 18px 18px;
+      text-align: left;
+      transition: .25s ease;
+      min-height: 98px;
+    }
+
+    .btn.primary {
+      background: var(--gold-light);
+      color: #07111F;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.055);
+      color: var(--off-white);
+      border-color: var(--border);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.22);
+    }
+
+    .btn .label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .btn .note {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.55;
+      opacity: 0.78;
+    }
+
+    .vault {
+      display: grid;
+      gap: 16px;
+    }
+
+    .side-card {
+      padding: 26px;
+    }
+
+    .side-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--gold-light);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini-word {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.045);
+      padding: 13px;
+      min-height: 72px;
+    }
+
+    .mini-word strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+    }
+
+    .mini-word span {
+      display: block;
+      margin-top: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .teacher-note {
+      border: 1px solid rgba(196,164,90,0.25);
+      background: rgba(196,164,90,0.075);
+      padding: 24px;
+      color: rgba(246,244,239,0.78);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .teacher-note strong {
+      display: block;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 0.74fr 0.26fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .progress-shell {
+      height: 8px;
+      background: rgba(255,255,255,0.09);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width .35s ease;
+    }
+
+    .game-card {
+      padding: clamp(26px, 4vw, 46px);
+    }
+
+    .mission-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .mission-kicker {
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mission-header h2 {
+      margin-top: 9px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.95;
+    }
+
+    .level-tag {
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.35);
+      padding: 11px 13px;
+      color: rgba(246,244,239,0.72);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .sentence-box {
+      border: 1px solid rgba(196,164,90,0.23);
+      background: rgba(5,13,26,0.42);
+      padding: clamp(24px, 4vw, 38px);
+    }
+
+    .sentence-box span {
+      display: block;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .sentence-box .prompt {
+      font-size: clamp(30px, 4.2vw, 56px);
+      font-weight: 800;
+      line-height: 1.08;
+    }
+
+    .sentence-box .translation {
+      margin-top: 18px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .option {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.045);
+      color: var(--off-white);
+      padding: 20px;
+      transition: .22s ease;
+      text-align: left;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: rgba(196,164,90,0.55);
+      background: rgba(255,255,255,0.085);
+      transform: translateY(-1px);
+    }
+
+    .option strong {
+      font-size: 20px;
+      letter-spacing: 0.08em;
+    }
+
+    .option.correct {
+      border-color: rgba(136,212,152,0.75);
+      background: rgba(136,212,152,0.13);
+    }
+
+    .option.wrong {
+      border-color: rgba(231,138,138,0.75);
+      background: rgba(231,138,138,0.13);
+    }
+
+    .option.muted {
+      opacity: 0.42;
+      background: rgba(255,255,255,0.018);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 22px;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.45);
+      padding: 22px;
+      animation: fadeUp .3s ease both;
+    }
+
+    .feedback.show {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .feedback strong {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .feedback.correct strong { color: var(--green); }
+    .feedback.wrong strong { color: var(--red); }
+
+    .feedback p {
+      color: rgba(246,244,239,0.78);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .next-btn, .small-btn, .reset-btn {
+      border: 1px solid rgba(196,164,90,0.48);
+      background: var(--gold-light);
+      color: #07111F;
+      padding: 13px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      transition: .22s ease;
+      white-space: nowrap;
+    }
+
+    .next-btn:hover, .small-btn:hover, .reset-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 14px;
+    }
+
+    .live-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .live-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 13px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .live-row:last-child { border-bottom: 0; }
+    .live-row strong { color: var(--off-white); }
+
+    .badge-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.035);
+      padding: 12px;
+      opacity: .55;
+    }
+
+    .badge.unlocked {
+      border-color: rgba(196,164,90,0.35);
+      background: rgba(196,164,90,0.10);
+      opacity: 1;
+    }
+
+    .badge .icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      flex: 0 0 auto;
+    }
+
+    .badge strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .badge span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .open-vault {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      color: var(--off-white);
+      padding: 21px;
+      text-align: left;
+      transition: .22s ease;
+    }
+
+    .open-vault:hover {
+      border-color: rgba(196,164,90,0.45);
+      background: rgba(255,255,255,0.085);
+    }
+
+    .open-vault span {
+      display: block;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .open-vault strong {
+      font-size: 16px;
+    }
+
+    .final-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .final-card, .review-card {
+      padding: clamp(26px, 4vw, 46px);
+    }
+
+    .final-card h2 {
+      margin-top: 12px;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.9;
+    }
+
+    .final-card p {
+      margin-top: 20px;
+      color: rgba(246,244,239,0.74);
+      line-height: 1.8;
+    }
+
+    .final-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .final-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 30px;
+    }
+
+    .ghost-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      color: var(--off-white);
+      padding: 13px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      transition: .22s ease;
+    }
+
+    .ghost-btn:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-1px);
+    }
+
+    .mistake-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mistake {
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.35);
+      padding: 17px;
+    }
+
+    .mistake-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .mistake-question {
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .answer-tag {
+      border: 1px solid rgba(136,212,152,0.35);
+      background: rgba(136,212,152,0.11);
+      color: #C7F2D1;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .mistake p {
+      margin-top: 12px;
+      color: rgba(246,244,239,0.72);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(5,13,26,0.86);
+      backdrop-filter: blur(18px);
+      z-index: 20;
+      padding: 18px;
+    }
+
+    .modal.show {
+      display: block;
+      animation: fadeUp .26s ease both;
+    }
+
+    .modal-box {
+      width: min(1160px, 100%);
+      height: 100%;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      background: #07111F;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h2 {
+      font-size: 36px;
+    }
+
+    .modal-content {
+      padding: 22px;
+      overflow-y: auto;
+    }
+
+    .study-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .study-card {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      padding: 20px;
+      transition: .22s ease;
+    }
+
+    .study-card:hover {
+      border-color: rgba(196,164,90,0.45);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .study-word {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .study-word strong {
+      font-size: 25px;
+      letter-spacing: 0.08em;
+    }
+
+    .study-word span {
+      color: var(--gold-light);
+      font-size: 13px;
+    }
+
+    .study-card .label {
+      margin-top: 18px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .study-card p {
+      margin-top: 9px;
+      color: rgba(246,244,239,0.75);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .study-example {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.38);
+      padding: 13px;
+      color: rgba(246,244,239,0.76);
+      font-size: 13px;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    @media (max-width: 1000px) {
+      .topbar, .intro-grid, .game-layout, .final-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .score-panel {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .study-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100% - 22px, 1220px);
+        padding-top: 20px;
+      }
+
+      .button-grid, .options, .word-grid, .final-stats, .study-grid, .score-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-header, .feedback.show, .modal-head {
+        flex-direction: column;
+      }
+
+      .level-tag {
+        white-space: normal;
+      }
+
+      .modal {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <section>
+        <div class="eyebrow">✦ MD Talk Memory Game</div>
+        <h1>Question Words</h1>
+        <p class="subtitle">
+          A sophisticated memorization game designed to help students recognize, choose and internalize English question words through fast decisions, immediate feedback and review cards.
+        </p>
+      </section>
+
+      <section class="score-panel" aria-label="Score panel">
+        <div class="stat"><span>Score</span><strong id="score">0</strong></div>
+        <div class="stat"><span>Streak</span><strong id="streak">0</strong></div>
+        <div class="stat"><span>Mastery</span><strong id="mastery">0%</strong></div>
+      </section>
+    </header>
+
+    <section id="introScreen" class="screen active">
+      <div class="intro-grid">
+        <article class="hero-card">
+          <div class="hero-icon">?</div>
+          <h2>Train recognition before translation.</h2>
+          <p>
+            The student will not only translate question words. They will connect each word to its communicative function: person, place, time, reason, quantity, duration, frequency, distance, possession and choice.
+          </p>
+
+          <div class="button-grid">
+            <button class="btn primary" onclick="startGame('guided')">
+              <span class="label">Guided Mode</span>
+              <span class="note">Ordered progression: foundation → meaning → precision → challenge.</span>
+            </button>
+            <button class="btn secondary" onclick="startGame('challenge')">
+              <span class="label">Challenge Mode</span>
+              <span class="note">Random order for stronger recall and memory pressure.</span>
+            </button>
+          </div>
+        </article>
+
+        <aside class="vault">
+          <div class="side-card">
+            <div class="side-title"><span>Memory Vault</span><span>14 Cards</span></div>
+            <div class="word-grid" id="miniWordGrid"></div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-center sm:w-[390px]">
-            <div className="border border-white/10 bg-white/[0.06] p-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">Score</p>
-              <p className="mt-1 text-2xl font-semibold text-amber-100">{score}</p>
-            </div>
-            <div className="border border-white/10 bg-white/[0.06] p-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">Streak</p>
-              <p className="mt-1 text-2xl font-semibold text-amber-100">{streak}</p>
-            </div>
-            <div className="border border-white/10 bg-white/[0.06] p-3">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">Mastery</p>
-              <p className="mt-1 text-2xl font-semibold text-amber-100">{mastery}%</p>
-            </div>
+          <div class="teacher-note">
+            <strong>Teacher Note</strong>
+            Use this game after presenting the meaning of each word. Then ask the student to explain why the correct answer is correct. That final step transforms recognition into active language awareness.
           </div>
-        </header>
-
-        {!started && (
-          <section className="grid flex-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }} className="border border-white/10 bg-white/[0.06] p-7 shadow-2xl backdrop-blur-xl md:p-10">
-              <div className="mb-6 inline-flex h-14 w-14 items-center justify-center border border-amber-200/30 bg-amber-100/10">
-                <Brain className="h-7 w-7 text-amber-100" />
-              </div>
-              <h2 className="font-serif text-3xl leading-tight text-white md:text-5xl">Train recognition before translation.</h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300">
-                The student will not only translate question words. They will connect each word to its communicative function: person, place, time, reason, quantity, duration, frequency, distance, possession and choice.
-              </p>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                <button onClick={() => startGame("guided")} className="group border border-amber-200/40 bg-amber-200 px-5 py-4 text-left text-slate-950 transition hover:bg-amber-100">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-bold uppercase tracking-[0.2em]">Guided Mode</span>
-                    <Unlock className="h-5 w-5 transition group-hover:translate-x-1" />
-                  </div>
-                  <p className="mt-2 text-sm leading-5 text-slate-800">Ordered progression: foundation → precision → challenge.</p>
-                </button>
-
-                <button onClick={() => startGame("challenge")} className="group border border-white/15 bg-white/[0.06] px-5 py-4 text-left transition hover:border-amber-200/40 hover:bg-white/[0.1]">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-white">Challenge Mode</span>
-                    <Zap className="h-5 w-5 text-amber-100 transition group-hover:translate-x-1" />
-                  </div>
-                  <p className="mt-2 text-sm leading-5 text-slate-300">Random order for stronger recall and memory pressure.</p>
-                </button>
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, delay: 0.1 }} className="grid gap-4">
-              <div className="border border-white/10 bg-slate-950/35 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-2 text-amber-100">
-                  <BookOpen className="h-5 w-5" />
-                  <h3 className="text-sm font-bold uppercase tracking-[0.25em]">Memory Vault</h3>
-                </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {questionWords.slice(0, 12).map((item) => (
-                    <div key={item.word} className="border border-white/10 bg-white/[0.04] p-3">
-                      <p className="text-sm font-bold text-white">{item.word}</p>
-                      <p className="mt-1 text-xs text-slate-400">{item.pt}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border border-amber-200/20 bg-amber-100/[0.06] p-6">
-                <p className="text-sm uppercase tracking-[0.25em] text-amber-100">Teacher Note</p>
-                <p className="mt-3 text-sm leading-7 text-slate-300">
-                  Use this game after presenting the meaning of each word. Then ask the student to explain why the correct answer is correct. That final step transforms recognition into active language awareness.
-                </p>
-              </div>
-            </motion.div>
-          </section>
-        )}
-
-        {started && !isFinished && current && (
-          <section className="grid flex-1 gap-7 lg:grid-cols-[0.74fr_0.26fr]">
-            <div className="flex flex-col">
-              <div className="mb-5 h-2 w-full overflow-hidden bg-white/10">
-                <motion.div className="h-full bg-amber-200" initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
-              </div>
-
-              <AnimatePresence mode="wait">
-                <motion.div key={current.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.32 }} className="flex-1 border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur-xl md:p-10">
-                  <div className="mb-7 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.28em] text-amber-100">Mission {index + 1} / {rounds.length}</p>
-                      <h2 className="mt-2 font-serif text-3xl text-white md:text-5xl">Complete the question</h2>
-                    </div>
-                    <div className="w-fit border border-white/10 bg-slate-950/30 px-4 py-2 text-xs uppercase tracking-[0.22em] text-slate-300">
-                      {current.level} · {mode === "challenge" ? "Random" : "Guided"}
-                    </div>
-                  </div>
-
-                  <div className="border border-amber-200/20 bg-slate-950/35 p-6 md:p-8">
-                    <p className="text-sm uppercase tracking-[0.25em] text-slate-400">Sentence</p>
-                    <p className="mt-4 text-3xl font-semibold leading-tight text-white md:text-5xl">{current.prompt}</p>
-                    <p className="mt-4 text-sm leading-6 text-slate-400">{current.translation}</p>
-                  </div>
-
-                  <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                    {current.options.map((option) => {
-                      const state = optionState(option);
-                      return (
-                        <button
-                          key={option}
-                          onClick={() => chooseAnswer(option)}
-                          className={classNames(
-                            "group flex min-h-[86px] items-center justify-between border px-5 py-4 text-left transition",
-                            state === "idle" && "border-white/10 bg-white/[0.04] hover:border-amber-200/50 hover:bg-white/[0.09]",
-                            state === "correct" && "border-emerald-300/70 bg-emerald-300/15",
-                            state === "wrong" && "border-rose-300/70 bg-rose-300/15",
-                            state === "muted" && "border-white/5 bg-white/[0.02] opacity-45"
-                          )}
-                        >
-                          <span className="text-lg font-bold tracking-[0.08em] text-white">{option}</span>
-                          {state === "correct" && <CheckCircle2 className="h-6 w-6 text-emerald-200" />}
-                          {state === "wrong" && <XCircle className="h-6 w-6 text-rose-200" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <AnimatePresence>
-                    {answered && (
-                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-7 border border-white/10 bg-slate-950/40 p-5">
-                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                          <div>
-                            <p className={classNames("text-sm font-bold uppercase tracking-[0.25em]", selected === current.answer ? "text-emerald-200" : "text-rose-200")}>{selected === current.answer ? "Correct" : "Review this"}</p>
-                            <p className="mt-2 text-base leading-7 text-slate-200">{current.explanation}</p>
-                          </div>
-                          <button onClick={nextRound} className="border border-amber-200/50 bg-amber-200 px-5 py-3 text-sm font-bold uppercase tracking-[0.2em] text-slate-950 transition hover:bg-amber-100">
-                            {index + 1 === rounds.length ? "Finish" : "Next"}
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <aside className="grid content-start gap-4">
-              <div className="border border-white/10 bg-white/[0.05] p-5 backdrop-blur-xl">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Live Performance</p>
-                <div className="mt-5 grid gap-3">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
-                    <span className="text-slate-400">Correct</span>
-                    <span className="font-bold text-white">{correct}</span>
-                  </div>
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
-                    <span className="text-slate-400">Mistakes</span>
-                    <span className="font-bold text-white">{mistakes.length}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-400">Best streak</span>
-                    <span className="font-bold text-white">{bestStreak}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border border-white/10 bg-white/[0.05] p-5 backdrop-blur-xl">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Badges</p>
-                  <Trophy className="h-4 w-4 text-amber-100" />
-                </div>
-                <div className="grid gap-2">
-                  {badgeRules.map((badge) => {
-                    const Icon = badge.icon;
-                    const unlocked = badge.test(stats);
-                    return (
-                      <div key={badge.name} className={classNames("flex items-center gap-3 border p-3", unlocked ? "border-amber-200/30 bg-amber-100/10" : "border-white/10 bg-white/[0.03] opacity-55")}>
-                        {unlocked ? <Icon className="h-5 w-5 text-amber-100" /> : <Lock className="h-5 w-5 text-slate-500" />}
-                        <div>
-                          <p className="text-sm font-semibold text-white">{badge.name}</p>
-                          <p className="text-xs text-slate-400">{badge.text}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <button onClick={() => setStudyOpen(true)} className="border border-white/10 bg-white/[0.05] p-5 text-left transition hover:border-amber-200/40 hover:bg-white/[0.08]">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Open</p>
-                    <p className="mt-1 font-semibold text-white">Study Cards</p>
-                  </div>
-                  <BookOpen className="h-5 w-5 text-amber-100" />
-                </div>
-              </button>
-            </aside>
-          </section>
-        )}
-
-        {isFinished && (
-          <section className="grid flex-1 items-start gap-7 lg:grid-cols-[0.95fr_1.05fr]">
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="border border-white/10 bg-white/[0.06] p-7 shadow-2xl backdrop-blur-xl md:p-10">
-              <div className="mb-5 flex h-16 w-16 items-center justify-center border border-amber-200/40 bg-amber-100/10">
-                <Trophy className="h-8 w-8 text-amber-100" />
-              </div>
-              <p className="text-xs uppercase tracking-[0.3em] text-amber-100">Session complete</p>
-              <h2 className="mt-3 font-serif text-4xl leading-tight text-white md:text-6xl">{mastery >= 85 ? "Excellent recall." : mastery >= 60 ? "Good foundation." : "Review mode needed."}</h2>
-              <p className="mt-5 text-base leading-8 text-slate-300">
-                Final score: <span className="font-bold text-amber-100">{score}</span>. The student got <span className="font-bold text-white">{correct}</span> out of <span className="font-bold text-white">{rounds.length}</span> missions correct.
-              </p>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="border border-white/10 bg-slate-950/30 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Mastery</p>
-                  <p className="mt-2 text-3xl font-bold text-white">{mastery}%</p>
-                </div>
-                <div className="border border-white/10 bg-slate-950/30 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Best Streak</p>
-                  <p className="mt-2 text-3xl font-bold text-white">{bestStreak}</p>
-                </div>
-                <div className="border border-white/10 bg-slate-950/30 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Badges</p>
-                  <p className="mt-2 text-3xl font-bold text-white">{unlockedBadges.length}</p>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <button onClick={() => startGame("challenge")} className="border border-amber-200/50 bg-amber-200 px-5 py-3 text-sm font-bold uppercase tracking-[0.2em] text-slate-950 transition hover:bg-amber-100">
-                  Play Again
-                </button>
-                <button onClick={resetGame} className="inline-flex items-center justify-center gap-2 border border-white/15 bg-white/[0.05] px-5 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/[0.09]">
-                  <RotateCcw className="h-4 w-4" /> Reset
-                </button>
-                <button onClick={() => setStudyOpen(true)} className="inline-flex items-center justify-center gap-2 border border-white/15 bg-white/[0.05] px-5 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/[0.09]">
-                  <BookOpen className="h-4 w-4" /> Review Cards
-                </button>
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="border border-white/10 bg-white/[0.05] p-6 backdrop-blur-xl md:p-8">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Personalized Review</p>
-              <h3 className="mt-3 font-serif text-3xl text-white">What to review next</h3>
-              {mistakes.length === 0 ? (
-                <div className="mt-6 border border-emerald-300/30 bg-emerald-300/10 p-5">
-                  <p className="font-semibold text-emerald-100">Perfect performance.</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">Move to oral production: ask the student to create 2 original questions with each question word.</p>
-                </div>
-              ) : (
-                <div className="mt-6 grid gap-3">
-                  {mistakes.map((mistake, i) => (
-                    <div key={`${mistake.id}-${i}`} className="border border-white/10 bg-slate-950/30 p-4">
-                      <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-white">{mistake.prompt}</p>
-                          <p className="mt-2 text-xs text-slate-400">Your answer: <span className="text-rose-200">{mistake.selected}</span></p>
-                        </div>
-                        <span className="w-fit border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-bold text-emerald-100">{mistake.answer}</span>
-                      </div>
-                      <p className="mt-3 text-sm leading-6 text-slate-300">{mistake.explanation}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          </section>
-        )}
+        </aside>
       </div>
+    </section>
 
-      <AnimatePresence>
-        {studyOpen && (
-          <motion.div className="fixed inset-0 z-50 bg-slate-950/80 p-4 backdrop-blur-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <motion.div initial={{ y: 28, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 28, opacity: 0 }} className="mx-auto h-full max-w-6xl overflow-hidden border border-white/10 bg-[#07111f] shadow-2xl">
-              <div className="flex items-center justify-between border-b border-white/10 p-5">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-amber-100">Memory Vault</p>
-                  <h2 className="font-serif text-3xl text-white">Question Word Study Cards</h2>
-                </div>
-                <button onClick={() => setStudyOpen(false)} className="border border-white/15 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-white/[0.08]">Close</button>
+    <section id="gameScreen" class="screen">
+      <div class="game-layout">
+        <section>
+          <div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div>
+
+          <article class="game-card">
+            <div class="mission-header">
+              <div>
+                <p class="mission-kicker" id="missionKicker">Mission 1 / 16</p>
+                <h2>Complete the question</h2>
               </div>
-              <div className="h-[calc(100%-88px)] overflow-y-auto p-5 md:p-7">
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {questionWords.map((item) => (
-                    <div key={item.word} className="group border border-white/10 bg-white/[0.05] p-5 transition hover:border-amber-200/40 hover:bg-white/[0.08]">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-2xl font-black tracking-[0.08em] text-white">{item.word}</p>
-                          <p className="mt-1 text-sm text-amber-100">{item.pt}</p>
-                        </div>
-                        <div className="flex h-10 w-10 items-center justify-center border border-amber-200/30 bg-amber-100/10">
-                          <Brain className="h-5 w-5 text-amber-100" />
-                        </div>
-                      </div>
-                      <div className="mt-5 border-t border-white/10 pt-4">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Use it to ask about</p>
-                        <p className="mt-2 text-sm leading-6 text-slate-200">{item.asks}</p>
-                      </div>
-                      <div className="mt-4 border border-white/10 bg-slate-950/30 p-4">
-                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Memory clue</p>
-                        <p className="mt-2 text-sm leading-6 text-slate-300">{item.clue}</p>
-                      </div>
-                      <p className="mt-4 text-sm italic leading-6 text-slate-300">“{item.example}”</p>
-                    </div>
-                  ))}
-                </div>
+              <div class="level-tag" id="levelTag">Foundation · Guided</div>
+            </div>
+
+            <div class="sentence-box">
+              <span>Sentence</span>
+              <div class="prompt" id="promptText">____ is your name?</div>
+              <div class="translation" id="translationText">Qual é o seu nome?</div>
+            </div>
+
+            <div class="options" id="optionsBox"></div>
+
+            <div class="feedback" id="feedbackBox">
+              <div>
+                <strong id="feedbackTitle">Correct</strong>
+                <p id="feedbackText">Use WHAT to ask for information, names, things or ideas.</p>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
-  );
-}
+              <button class="next-btn" onclick="nextMission()" id="nextButton">Next</button>
+            </div>
+          </article>
+        </section>
+
+        <aside class="sidebar">
+          <div class="side-card">
+            <div class="side-title"><span>Live Performance</span><span>●</span></div>
+            <div class="live-list">
+              <div class="live-row"><span>Correct</span><strong id="correctLive">0</strong></div>
+              <div class="live-row"><span>Mistakes</span><strong id="mistakesLive">0</strong></div>
+              <div class="live-row"><span>Best streak</span><strong id="bestStreakLive">0</strong></div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-title"><span>Badges</span><span>🏆</span></div>
+            <div class="badge-list" id="badgeList"></div>
+          </div>
+
+          <button class="open-vault" onclick="openVault()">
+            <span>Open</span>
+            <strong>Study Cards</strong>
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="final-grid">
+        <article class="final-card">
+          <div class="hero-icon">🏆</div>
+          <p class="mission-kicker">Session Complete</p>
+          <h2 id="finalTitle">Excellent recall.</h2>
+          <p id="finalText">Final score: 0. The student got 0 out of 16 missions correct.</p>
+
+          <div class="final-stats">
+            <div class="stat"><span>Mastery</span><strong id="finalMastery">0%</strong></div>
+            <div class="stat"><span>Best Streak</span><strong id="finalBestStreak">0</strong></div>
+            <div class="stat"><span>Badges</span><strong id="finalBadges">0</strong></div>
+          </div>
+
+          <div class="final-actions">
+            <button class="small-btn" onclick="startGame('challenge')">Play Again</button>
+            <button class="ghost-btn" onclick="resetGame()">Reset</button>
+            <button class="ghost-btn" onclick="openVault()">Review Cards</button>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <p class="mission-kicker">Personalized Review</p>
+          <h2 style="font-size:42px;margin-top:10px;">What to review next</h2>
+          <div class="mistake-list" id="mistakeList"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <section class="modal" id="vaultModal" aria-label="Study cards modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <p class="mission-kicker">Memory Vault</p>
+          <h2>Question Word Study Cards</h2>
+        </div>
+        <button class="ghost-btn" onclick="closeVault()">Close</button>
+      </div>
+      <div class="modal-content">
+        <div class="study-grid" id="studyGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const questionWords = [
+      { word: "WHAT", asks: "information, things, actions or ideas", pt: "o quê / qual", clue: "Think: object, idea, activity.", example: "What do you do after class?" },
+      { word: "WHERE", asks: "place or location", pt: "onde", clue: "Think: place, room, city, hospital, clinic.", example: "Where does the patient live?" },
+      { word: "WHEN", asks: "time, date or moment", pt: "quando", clue: "Think: clock, calendar, schedule.", example: "When is your next appointment?" },
+      { word: "WHY", asks: "reason or cause", pt: "por que", clue: "Think: reason, explanation, cause.", example: "Why did you choose this specialty?" },
+      { word: "WHO", asks: "a person", pt: "quem", clue: "Think: person, doctor, student, patient.", example: "Who is your English teacher?" },
+      { word: "WHOSE", asks: "possession or ownership", pt: "de quem", clue: "Think: owner, belonging, possession.", example: "Whose notebook is this?" },
+      { word: "WHICH", asks: "choice from a limited group", pt: "qual / quais", clue: "Think: option A or option B.", example: "Which option is better for you?" },
+      { word: "HOW", asks: "manner, method, condition or quality", pt: "como", clue: "Think: process, condition, way.", example: "How are you feeling today?" },
+      { word: "HOW MANY", asks: "quantity with countable nouns", pt: "quantos / quantas", clue: "Think: numbers + plural countable things.", example: "How many classes do you have this week?" },
+      { word: "HOW MUCH", asks: "quantity, price or uncountable nouns", pt: "quanto / quanta / quanto custa", clue: "Think: money, water, time as amount, information.", example: "How much time do you need?" },
+      { word: "HOW LONG", asks: "duration or length of time", pt: "por quanto tempo / quanto tempo", clue: "Think: duration from start to finish.", example: "How long have you studied English?" },
+      { word: "HOW OFTEN", asks: "frequency", pt: "com que frequência", clue: "Think: always, usually, sometimes, once a week.", example: "How often do you review vocabulary?" },
+      { word: "HOW FAR", asks: "distance", pt: "quão longe / qual a distância", clue: "Think: kilometers, distance, location gap.", example: "How far is the hospital from here?" },
+      { word: "HOW OLD", asks: "age", pt: "quantos anos", clue: "Think: age of a person, building, object, or institution.", example: "How old is your son?" }
+    ];
+
+    const missions = [
+      { id: 1, level: "Foundation", prompt: "____ is your name?", answer: "WHAT", options: ["WHAT", "WHO", "WHERE", "WHEN"], explanation: "Use WHAT to ask for information, names, things or ideas.", translation: "Qual é o seu nome?" },
+      { id: 2, level: "Foundation", prompt: "____ are you from?", answer: "WHERE", options: ["WHEN", "WHERE", "WHY", "WHOSE"], explanation: "Use WHERE to ask about place or origin.", translation: "De onde você é?" },
+      { id: 3, level: "Foundation", prompt: "____ is your appointment?", answer: "WHEN", options: ["WHEN", "WHY", "WHICH", "HOW"], explanation: "Use WHEN to ask about time, date or moment.", translation: "Quando é sua consulta?" },
+      { id: 4, level: "Foundation", prompt: "____ is your favorite doctor?", answer: "WHO", options: ["WHO", "WHAT", "WHOSE", "WHERE"], explanation: "Use WHO when the answer is a person.", translation: "Quem é seu médico favorito?" },
+      { id: 5, level: "Meaning", prompt: "____ did you cancel the class?", answer: "WHY", options: ["WHY", "WHEN", "WHERE", "WHICH"], explanation: "Use WHY to ask for the reason or cause of something.", translation: "Por que você cancelou a aula?" },
+      { id: 6, level: "Meaning", prompt: "____ phone is ringing?", answer: "WHOSE", options: ["WHO", "WHOSE", "WHICH", "WHAT"], explanation: "Use WHOSE to ask about possession or ownership.", translation: "De quem é o telefone que está tocando?" },
+      { id: 7, level: "Meaning", prompt: "____ course do you prefer: Medical English or Business English?", answer: "WHICH", options: ["WHAT", "WHICH", "WHY", "HOW"], explanation: "Use WHICH when there is a limited set of options.", translation: "Qual curso você prefere: inglês médico ou inglês para negócios?" },
+      { id: 8, level: "Meaning", prompt: "____ are you feeling after the night shift?", answer: "HOW", options: ["HOW", "WHAT", "WHERE", "WHO"], explanation: "Use HOW to ask about condition, manner, process or quality.", translation: "Como você está se sentindo depois do plantão noturno?" },
+      { id: 9, level: "Precision", prompt: "____ patients did you see today?", answer: "HOW MANY", options: ["HOW MUCH", "HOW MANY", "HOW OFTEN", "HOW LONG"], explanation: "Use HOW MANY with countable plural nouns, such as patients, books, classes, exams.", translation: "Quantos pacientes você atendeu hoje?" },
+      { id: 10, level: "Precision", prompt: "____ water do you drink every day?", answer: "HOW MUCH", options: ["HOW MANY", "HOW MUCH", "HOW FAR", "HOW OLD"], explanation: "Use HOW MUCH with uncountable nouns, prices and amounts.", translation: "Quanta água você bebe todos os dias?" },
+      { id: 11, level: "Precision", prompt: "____ have you worked at this hospital?", answer: "HOW LONG", options: ["HOW OFTEN", "HOW LONG", "HOW FAR", "HOW MUCH"], explanation: "Use HOW LONG to ask about duration.", translation: "Há quanto tempo você trabalha neste hospital?" },
+      { id: 12, level: "Precision", prompt: "____ do you practice English?", answer: "HOW OFTEN", options: ["HOW OLD", "HOW OFTEN", "HOW FAR", "HOW LONG"], explanation: "Use HOW OFTEN to ask about frequency.", translation: "Com que frequência você pratica inglês?" },
+      { id: 13, level: "Challenge", prompt: "____ is your clinic from the airport?", answer: "HOW FAR", options: ["HOW FAR", "HOW LONG", "WHERE", "WHEN"], explanation: "Use HOW FAR to ask about distance.", translation: "A que distância sua clínica fica do aeroporto?" },
+      { id: 14, level: "Challenge", prompt: "____ is your daughter? She looks very young.", answer: "HOW OLD", options: ["HOW LONG", "HOW MANY", "HOW OLD", "WHOSE"], explanation: "Use HOW OLD to ask about age.", translation: "Quantos anos tem sua filha? Ela parece muito jovem." },
+      { id: 15, level: "Challenge", prompt: "____ did the patient arrive late? Because of traffic.", answer: "WHY", options: ["WHEN", "WHY", "WHERE", "HOW MANY"], explanation: "The answer gives a reason, so the correct question word is WHY.", translation: "Por que o paciente chegou atrasado? Por causa do trânsito." },
+      { id: 16, level: "Challenge", prompt: "____ document should I sign, this one or that one?", answer: "WHICH", options: ["WHOSE", "WHICH", "WHAT", "WHY"], explanation: "There are two specific options, so WHICH is more precise than WHAT.", translation: "Qual documento eu devo assinar, este ou aquele?" }
+    ];
+
+    const badges = [
+      { name: "First Spark", icon: "✦", text: "Answered your first mission", test: () => state.totalAnswered >= 1 },
+      { name: "Memory Streak", icon: "⚡", text: "Reached a 3-answer streak", test: () => state.bestStreak >= 3 },
+      { name: "Precision Mode", icon: "◎", text: "Got 8 answers correct", test: () => state.correct >= 8 },
+      { name: "Question Master", icon: "🏆", text: "Perfect score", test: () => state.correct === state.rounds.length && state.rounds.length > 0 }
+    ];
+
+    let state = {
+      started: false,
+      mode: "guided",
+      rounds: [...missions],
+      index: 0,
+      selected: null,
+      answered: false,
+      correct: 0,
+      streak: 0,
+      bestStreak: 0,
+      mistakes: [],
+      totalAnswered: 0
+    };
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function renderMiniWords() {
+      const html = questionWords.slice(0, 12).map(item => `
+        <div class="mini-word">
+          <strong>${item.word}</strong>
+          <span>${item.pt}</span>
+        </div>
+      `).join("");
+      $("miniWordGrid").innerHTML = html;
+    }
+
+    function renderStudyCards() {
+      const html = questionWords.map(item => `
+        <article class="study-card">
+          <div class="study-word">
+            <div>
+              <strong>${item.word}</strong><br>
+              <span>${item.pt}</span>
+            </div>
+            <span>?</span>
+          </div>
+          <div class="label">Use it to ask about</div>
+          <p>${item.asks}</p>
+          <div class="label">Memory clue</div>
+          <p>${item.clue}</p>
+          <div class="study-example">“${item.example}”</div>
+        </article>
+      `).join("");
+      $("studyGrid").innerHTML = html;
+    }
+
+    function renderBadges() {
+      const html = badges.map(badge => {
+        const unlocked = badge.test();
+        return `
+          <div class="badge ${unlocked ? 'unlocked' : ''}">
+            <div class="icon">${unlocked ? badge.icon : '🔒'}</div>
+            <div>
+              <strong>${badge.name}</strong>
+              <span>${badge.text}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+      $("badgeList").innerHTML = html;
+    }
+
+    function updateStats() {
+      const score = state.correct * 100 + state.bestStreak * 20;
+      const mastery = state.rounds.length ? Math.round((state.correct / state.rounds.length) * 100) : 0;
+      state.totalAnswered = state.answered ? state.index + 1 : state.index;
+
+      $("score").textContent = score;
+      $("streak").textContent = state.streak;
+      $("mastery").textContent = mastery + "%";
+      $("correctLive").textContent = state.correct;
+      $("mistakesLive").textContent = state.mistakes.length;
+      $("bestStreakLive").textContent = state.bestStreak;
+
+      renderBadges();
+    }
+
+    function setScreen(screenId) {
+      ["introScreen", "gameScreen", "finalScreen"].forEach(id => $(id).classList.remove("active"));
+      $(screenId).classList.add("active");
+    }
+
+    function startGame(mode) {
+      state = {
+        started: true,
+        mode,
+        rounds: mode === "challenge" ? shuffle(missions) : [...missions],
+        index: 0,
+        selected: null,
+        answered: false,
+        correct: 0,
+        streak: 0,
+        bestStreak: 0,
+        mistakes: [],
+        totalAnswered: 0
+      };
+      setScreen("gameScreen");
+      renderMission();
+      updateStats();
+    }
+
+    function resetGame() {
+      state = {
+        started: false,
+        mode: "guided",
+        rounds: [...missions],
+        index: 0,
+        selected: null,
+        answered: false,
+        correct: 0,
+        streak: 0,
+        bestStreak: 0,
+        mistakes: [],
+        totalAnswered: 0
+      };
+      setScreen("introScreen");
+      updateStats();
+    }
+
+    function renderMission() {
+      const current = state.rounds[state.index];
+      if (!current) {
+        renderFinal();
+        return;
+      }
+
+      const progress = ((state.index + (state.answered ? 1 : 0)) / state.rounds.length) * 100;
+      $("progressBar").style.width = progress + "%";
+      $("missionKicker").textContent = `Mission ${state.index + 1} / ${state.rounds.length}`;
+      $("levelTag").textContent = `${current.level} · ${state.mode === "challenge" ? "Random" : "Guided"}`;
+      $("promptText").textContent = current.prompt;
+      $("translationText").textContent = current.translation;
+      $("feedbackBox").className = "feedback";
+      $("feedbackTitle").textContent = "";
+      $("feedbackText").textContent = "";
+      $("nextButton").textContent = state.index + 1 === state.rounds.length ? "Finish" : "Next";
+
+      const html = current.options.map(option => `
+        <button class="option" onclick="chooseAnswer('${option.replace(/'/g, "\\'")}')">
+          <strong>${option}</strong>
+          <span>○</span>
+        </button>
+      `).join("");
+      $("optionsBox").innerHTML = html;
+      updateStats();
+    }
+
+    function chooseAnswer(option) {
+      if (state.answered) return;
+
+      const current = state.rounds[state.index];
+      state.selected = option;
+      state.answered = true;
+
+      const isCorrect = option === current.answer;
+
+      if (isCorrect) {
+        state.correct += 1;
+        state.streak += 1;
+        state.bestStreak = Math.max(state.bestStreak, state.streak);
+      } else {
+        state.streak = 0;
+        state.mistakes.push({ ...current, selected: option });
+      }
+
+      const optionButtons = Array.from(document.querySelectorAll(".option"));
+      optionButtons.forEach(button => {
+        const text = button.querySelector("strong").textContent;
+        button.disabled = true;
+        button.querySelector("span").textContent = "";
+
+        if (text === current.answer) {
+          button.classList.add("correct");
+          button.querySelector("span").textContent = "✓";
+        } else if (text === option && !isCorrect) {
+          button.classList.add("wrong");
+          button.querySelector("span").textContent = "✕";
+        } else {
+          button.classList.add("muted");
+        }
+      });
+
+      $("feedbackBox").className = "feedback show " + (isCorrect ? "correct" : "wrong");
+      $("feedbackTitle").textContent = isCorrect ? "Correct" : "Review this";
+      $("feedbackText").textContent = current.explanation;
+      $("progressBar").style.width = (((state.index + 1) / state.rounds.length) * 100) + "%";
+
+      updateStats();
+    }
+
+    function nextMission() {
+      state.index += 1;
+      state.selected = null;
+      state.answered = false;
+      renderMission();
+    }
+
+    function renderFinal() {
+      setScreen("finalScreen");
+      const score = state.correct * 100 + state.bestStreak * 20;
+      const mastery = Math.round((state.correct / state.rounds.length) * 100);
+      const badgeCount = badges.filter(b => b.test()).length;
+
+      let title = "Review mode needed.";
+      if (mastery >= 85) title = "Excellent recall.";
+      else if (mastery >= 60) title = "Good foundation.";
+
+      $("finalTitle").textContent = title;
+      $("finalText").innerHTML = `Final score: <strong style="color:var(--gold-light)">${score}</strong>. The student got <strong style="color:var(--off-white)">${state.correct}</strong> out of <strong style="color:var(--off-white)">${state.rounds.length}</strong> missions correct.`;
+      $("finalMastery").textContent = mastery + "%";
+      $("finalBestStreak").textContent = state.bestStreak;
+      $("finalBadges").textContent = badgeCount;
+
+      if (state.mistakes.length === 0) {
+        $("mistakeList").innerHTML = `
+          <div class="mistake" style="border-color:rgba(136,212,152,0.35); background:rgba(136,212,152,0.10);">
+            <div class="mistake-question">Perfect performance.</div>
+            <p>Move to oral production: ask the student to create 2 original questions with each question word.</p>
+          </div>
+        `;
+      } else {
+        $("mistakeList").innerHTML = state.mistakes.map(mistake => `
+          <div class="mistake">
+            <div class="mistake-top">
+              <div>
+                <div class="mistake-question">${mistake.prompt}</div>
+                <p>Your answer: <span style="color:var(--red)">${mistake.selected}</span></p>
+              </div>
+              <span class="answer-tag">${mistake.answer}</span>
+            </div>
+            <p>${mistake.explanation}</p>
+          </div>
+        `).join("");
+      }
+
+      updateStats();
+    }
+
+    function openVault() {
+      $("vaultModal").classList.add("show");
+    }
+
+    function closeVault() {
+      $("vaultModal").classList.remove("show");
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") closeVault();
+    });
+
+    renderMiniWords();
+    renderStudyCards();
+    renderBadges();
+    updateStats();
+  </script>
+</body>
+</html>
