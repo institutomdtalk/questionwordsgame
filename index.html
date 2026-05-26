@@ -1,537 +1,1300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Verb To Be — MD Talk Self-Study</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg:        #F5F0E8;
-    --bg-card:   #FDFAF5;
-    --bg-deep:   #EDE7D9;
-    --navy:      #0B1D3A;
-    --navy-mid:  #1A3358;
-    --navy-light:#2A4A70;
-    --gold:      #C4A45A;
-    --gold-light:#D4BA7A;
-    --gold-pale: #E8D9B0;
-    --text:      #1C2B3A;
-    --text-mid:  #3A4D60;
-    --text-muted:#7A8A98;
-    --border:    rgba(196,164,90,.22);
-    --success:   #3A9E72;
-    --error:     #B84C44;
-    --success-bg:rgba(58,158,114,.1);
-    --error-bg:  rgba(184,76,68,.1);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Raleway', sans-serif;
-    font-weight: 400;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question Words Memory Game | MD Talk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0B1D3A;
+      --navy-deep: #050D1A;
+      --navy-mid: #0F2645;
+      --gold: #C4A45A;
+      --gold-light: #D4BA7A;
+      --off-white: #F6F4EF;
+      --text-body: #E8E2D8;
+      --text-muted: #A8A39D;
+      --green: #88D498;
+      --red: #E78A8A;
+      --border: rgba(246, 244, 239, 0.14);
+      --glass: rgba(255,255,255,0.055);
+      --glass-strong: rgba(255,255,255,0.095);
+    }
 
-  /* ── HEADER ── */
-  .site-header {
-    position: fixed; top:0; left:0; right:0; z-index:100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 18px 52px;
-    background: linear-gradient(to bottom, rgba(245,240,232,.97) 60%, transparent);
-  }
-  .brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; letter-spacing:.12em; color:var(--navy); text-decoration:none; }
-  .lesson-tag { font-size:.65rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--text-muted); }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 88vh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; position:relative; padding:120px 40px 80px;
-    background: radial-gradient(ellipse 70% 55% at 50% 45%, rgba(196,164,90,.11) 0%, transparent 70%);
-    overflow:hidden;
-  }
-  .hero::before {
-    content:''; position:absolute; inset:0;
-    background-image: radial-gradient(rgba(196,164,90,.18) 1px, transparent 1px);
-    background-size: 34px 34px; pointer-events:none; opacity:.55;
-  }
-  .geo { position:absolute; pointer-events:none; }
-  .geo-ring-1 { width:380px;height:380px;border:1px solid rgba(196,164,90,.15);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:geoFloat 8s ease-in-out infinite; }
-  .geo-ring-2 { width:580px;height:580px;border:1px solid rgba(196,164,90,.08);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:geoFloat 12s ease-in-out infinite reverse; }
-  .geo-diamond { width:52px;height:52px;border:1px solid rgba(196,164,90,.3);transform:rotate(45deg);top:18%;right:13%;animation:geoPulse 6s ease-in-out infinite; }
-  .geo-line { width:1px;height:110px;background:linear-gradient(to bottom,transparent,rgba(196,164,90,.4),transparent);bottom:16%;left:11%;animation:geoFloat 9s ease-in-out infinite 2s; }
-  @keyframes geoFloat { 0%,100%{transform:translateY(0) translate(-50%,-50%)} 50%{transform:translateY(-16px) translate(-50%,-50%)} }
-  @keyframes geoPulse { 0%,100%{opacity:.35;transform:rotate(45deg) scale(1)} 50%{opacity:.85;transform:rotate(45deg) scale(1.08)} }
+    body {
+      min-height: 100vh;
+      font-family: 'Raleway', sans-serif;
+      color: var(--off-white);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(196, 164, 90, 0.24), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(80, 139, 204, 0.17), transparent 28%),
+        linear-gradient(135deg, #050D1A 0%, #0B1D3A 48%, #06101E 100%);
+      overflow-x: hidden;
+    }
 
-  .hero-overline { font-size:.65rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:20px; }
-  .hero-title { font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,5.2rem);font-weight:300;line-height:1.05;color:var(--navy);margin-bottom:12px; }
-  .hero-title em { font-style:italic;color:var(--gold); }
-  .hero-divider { width:44px;height:1px;background:var(--gold);margin:22px auto; }
-  .hero-desc { font-size:.92rem;font-weight:300;color:var(--text-mid);max-width:500px;line-height:1.8; }
-  .scroll-cta { margin-top:48px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text-muted);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;animation:scrollPulse 2.5s ease-in-out infinite;cursor:pointer; }
-  .scroll-cta::after { content:'';width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent); }
-  @keyframes scrollPulse { 0%,100%{opacity:.5;transform:translateY(0)} 50%{opacity:1;transform:translateY(6px)} }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 80%);
+      pointer-events: none;
+    }
 
-  /* ── SECTION LABELS ── */
-  .section-label { text-align:center;font-size:.65rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px; }
-  .section-label::after { content:'';display:block;width:30px;height:1px;background:var(--gold);margin:9px auto 0; }
-  .section-title { font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:300;text-align:center;margin-bottom:50px;color:var(--navy); }
+    .app {
+      position: relative;
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 46px;
+    }
 
-  /* ── SLIDES SECTION ── */
-  .slides-section { padding:100px 0 80px; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
 
-  .slider-outer { position:relative; max-width:880px; margin:0 auto; padding:0 68px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(196,164,90,0.38);
+      background: rgba(196,164,90,0.10);
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
 
-  .slider-track-wrap {
-    overflow:hidden; border-radius:4px;
-    border:1px solid var(--border);
-    box-shadow: 0 4px 32px rgba(11,29,58,.07);
-  }
-  .slider-track { display:flex; transition:transform .46s cubic-bezier(.77,0,.18,1); will-change:transform; }
+    h1, h2, h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
 
-  /* ── SLIDE CARD ── */
-  .slide-card {
-    min-width:100%;
-    background: var(--bg-card);
-    padding: 50px 54px 46px;
-    position:relative; overflow:hidden;
-  }
-  .slide-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent); }
-  .slide-num { position:absolute;top:22px;right:30px;font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:rgba(196,164,90,.12);line-height:1;pointer-events:none; }
+    h1 {
+      font-size: clamp(48px, 7vw, 88px);
+      line-height: 0.9;
+    }
 
-  .slide-tag { font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px; }
-  .slide-title { font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2.5vw,1.9rem);font-weight:400;color:var(--navy);margin-bottom:26px;line-height:1.25; }
-  .slide-body { font-size:.87rem;font-weight:400;line-height:1.85;color:var(--text-mid); }
-  .slide-body p { margin-bottom:14px; }
-  .slide-body strong { color:var(--navy);font-weight:600; }
-  .slide-body em { color:var(--navy-mid);font-style:italic; }
+    .subtitle {
+      max-width: 710px;
+      margin-top: 14px;
+      color: rgba(246,244,239,0.72);
+      line-height: 1.75;
+      font-size: 15px;
+    }
 
-  /* TABLE */
-  .grammar-table { width:100%;border-collapse:collapse;margin:18px 0;font-size:.82rem; }
-  .grammar-table th { background:rgba(196,164,90,.12);color:var(--navy);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.64rem;padding:9px 14px;text-align:left;border-bottom:1px solid var(--border); }
-  .grammar-table td { padding:9px 14px;border-bottom:1px solid rgba(11,29,58,.06);color:var(--text-mid);font-weight:400; }
-  .grammar-table tr:last-child td { border-bottom:none; }
-  .grammar-table .hl { color:var(--navy);font-weight:600; }
-  .grammar-table tr:hover td { background:rgba(196,164,90,.05); }
+    .score-panel {
+      min-width: 390px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
 
-  /* BOXES */
-  .example-box { background:rgba(196,164,90,.08);border-left:2px solid var(--gold);border-radius:0 3px 3px 0;padding:13px 17px;margin:11px 0; }
-  .ex-en { color:var(--navy);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.97rem; }
-  .ex-pt { color:var(--text-muted);font-size:.75rem;margin-top:3px;font-weight:400; }
+    .stat {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      padding: 16px 12px;
+      text-align: center;
+      backdrop-filter: blur(18px);
+    }
 
-  .note-box { background:rgba(196,164,90,.09);border:1px solid rgba(196,164,90,.3);border-radius:3px;padding:13px 17px;margin:15px 0;font-size:.79rem;color:var(--text-mid);line-height:1.7; }
-  .note-box strong { color:var(--navy); }
+    .stat span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
 
-  .formula { background:rgba(11,29,58,.05);border:1px solid var(--border);border-radius:3px;padding:13px 20px;margin:15px 0;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--navy);text-align:center;letter-spacing:.03em; }
+    .stat strong {
+      display: block;
+      margin-top: 7px;
+      color: var(--gold-light);
+      font-size: 26px;
+    }
 
-  /* ARROWS */
-  .arrow-btn {
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:44px;height:44px; border-radius:50%;
-    border:1px solid var(--border);
-    background:var(--bg-card);
-    color:var(--navy); font-size:1rem; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    transition:all .2s ease; z-index:10;
-    box-shadow:0 2px 12px rgba(11,29,58,.08);
-  }
-  .arrow-btn:hover:not(:disabled) { background:var(--gold);color:#fff;border-color:var(--gold); }
-  .arrow-btn:disabled { opacity:.2;cursor:default; }
-  .arrow-btn.prev { left:8px; }
-  .arrow-btn.next { right:8px; }
+    .screen {
+      display: none;
+      animation: fadeUp .45s ease both;
+    }
 
-  /* DOTS + COUNTER */
-  .progress-row { display:flex;align-items:center;justify-content:center;gap:10px;margin-top:20px; }
-  .pdot { width:7px;height:7px;border-radius:50%;background:rgba(196,164,90,.3);cursor:pointer;transition:all .3s ease;border:none;padding:0;outline:none; }
-  .pdot.active { background:var(--gold);transform:scale(1.5); }
-  .slide-counter { text-align:center;margin-top:10px;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted); }
+    .screen.active {
+      display: block;
+    }
 
-  /* GO TO QUIZ */
-  .go-quiz-wrap { text-align:center;margin-top:38px; }
-  .go-quiz-btn { display:none;background:var(--navy);color:#fff;border:none;font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:14px 36px;border-radius:2px;cursor:pointer;transition:background .2s; }
-  .go-quiz-btn:hover { background:var(--navy-mid); }
-  .go-quiz-btn.show { display:inline-block;animation:revealUp .4s ease; }
-  @keyframes revealUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  /* ── QUIZ ── */
-  .quiz-section { padding:90px 0 110px; background:var(--bg-deep); }
-  .quiz-wrapper { max-width:740px;margin:0 auto;padding:0 24px; }
+    .intro-grid {
+      min-height: 630px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 26px;
+      align-items: center;
+    }
 
-  .quiz-card {
-    background:var(--bg-card);
-    border:1px solid var(--border); border-radius:4px;
-    padding:38px 46px; margin-bottom:20px;
-    position:relative; overflow:hidden;
-    box-shadow:0 2px 20px rgba(11,29,58,.06);
-    opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;
-  }
-  .quiz-card::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent); }
-  .quiz-card.visible { opacity:1;transform:translateY(0); }
+    .hero-card, .game-card, .side-card, .final-card, .review-card {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(22px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+    }
 
-  .q-number { font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px; }
-  .q-text { font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-weight:400;line-height:1.55;color:var(--navy);margin-bottom:24px; }
-  .q-blank { display:inline-block;border-bottom:1.5px solid var(--gold);min-width:60px;text-align:center;color:var(--gold);font-style:italic; }
+    .hero-card {
+      padding: clamp(30px, 5vw, 56px);
+    }
 
-  .options-grid { display:grid;grid-template-columns:1fr 1fr;gap:9px; }
-  .option-btn {
-    background:rgba(11,29,58,.03);border:1px solid rgba(11,29,58,.1);border-radius:3px;
-    padding:11px 15px;color:var(--text-mid);
-    font-family:'Raleway',sans-serif;font-size:.82rem;font-weight:400;
-    text-align:left;cursor:pointer;transition:all .18s ease;
-    display:flex;align-items:center;gap:10px;
-  }
-  .option-btn:hover:not(:disabled) { background:rgba(196,164,90,.1);border-color:var(--gold);color:var(--navy); }
-  .opt-letter { display:flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;border-radius:50%;border:1px solid var(--border);font-size:.68rem;font-weight:700;color:var(--gold); }
-  .option-btn.correct { background:var(--success-bg);border-color:var(--success);color:var(--text); }
-  .option-btn.correct .opt-letter { border-color:var(--success);color:var(--success); }
-  .option-btn.wrong { background:var(--error-bg);border-color:var(--error);color:var(--text-muted); }
-  .option-btn.wrong .opt-letter { border-color:var(--error);color:var(--error); }
-  .option-btn:disabled { cursor:default; }
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(196,164,90,0.35);
+      background: rgba(196,164,90,0.10);
+      color: var(--gold-light);
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
 
-  .feedback { display:none;margin-top:16px;padding:12px 16px;border-radius:3px;font-size:.8rem;font-weight:400;line-height:1.65; }
-  .feedback.show { display:block; }
-  .feedback.correct-fb { background:var(--success-bg);border:1px solid rgba(58,158,114,.25);color:#2A7A56; }
-  .feedback.wrong-fb { background:var(--error-bg);border:1px solid rgba(184,76,68,.22);color:#8B3530; }
+    .hero-card h2 {
+      font-size: clamp(40px, 5.8vw, 72px);
+      line-height: 0.95;
+    }
 
-  /* SCORE */
-  .score-panel { display:none;text-align:center;padding:56px 40px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;margin-top:28px;box-shadow:0 4px 28px rgba(11,29,58,.08); }
-  .score-panel.show { display:block; }
-  .score-label { font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px; }
-  .score-number { font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:var(--navy);line-height:1;margin-bottom:4px; }
-  .score-denom { font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--text-muted);margin-bottom:22px; }
-  .score-msg { font-size:.87rem;font-weight:400;color:var(--text-mid);line-height:1.75;max-width:380px;margin:0 auto 28px; }
-  .retry-btn { background:transparent;border:1px solid var(--border);color:var(--navy);font-family:'Raleway',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:12px 30px;cursor:pointer;border-radius:2px;transition:all .2s; }
-  .retry-btn:hover { background:var(--navy);color:#fff;border-color:var(--navy); }
+    .hero-card p {
+      margin-top: 20px;
+      color: rgba(246,244,239,0.73);
+      line-height: 1.9;
+      font-size: 16px;
+    }
 
-  /* FOOTER */
-  footer { border-top:1px solid var(--border);padding:34px 52px;display:flex;align-items:center;justify-content:space-between;background:var(--bg); }
-  .brand-f { font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--navy);font-weight:600;letter-spacing:.1em; }
-  .copy { font-size:.65rem;color:var(--text-muted);letter-spacing:.1em; }
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+    }
 
-  [data-reveal] { opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease; }
-  [data-reveal].visible { opacity:1;transform:translateY(0); }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 0;
+    }
 
-  @media(max-width:640px){
-    .slider-outer{padding:0 48px;}
-    .slide-card{padding:30px 22px 26px;}
-    .quiz-card{padding:30px 22px;}
-    .options-grid{grid-template-columns:1fr;}
-    .site-header{padding:16px 24px;}
-    footer{flex-direction:column;gap:10px;text-align:center;}
-  }
-</style>
+    .btn {
+      border: 1px solid rgba(196,164,90,0.45);
+      padding: 18px 18px;
+      text-align: left;
+      transition: .25s ease;
+      min-height: 98px;
+    }
+
+    .btn.primary {
+      background: var(--gold-light);
+      color: #07111F;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.055);
+      color: var(--off-white);
+      border-color: var(--border);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.22);
+    }
+
+    .btn .label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .btn .note {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.55;
+      opacity: 0.78;
+    }
+
+    .vault {
+      display: grid;
+      gap: 16px;
+    }
+
+    .side-card {
+      padding: 26px;
+    }
+
+    .side-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--gold-light);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini-word {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.045);
+      padding: 13px;
+      min-height: 72px;
+    }
+
+    .mini-word strong {
+      display: block;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+    }
+
+    .mini-word span {
+      display: block;
+      margin-top: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .teacher-note {
+      border: 1px solid rgba(196,164,90,0.25);
+      background: rgba(196,164,90,0.075);
+      padding: 24px;
+      color: rgba(246,244,239,0.78);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .teacher-note strong {
+      display: block;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 0.74fr 0.26fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .progress-shell {
+      height: 8px;
+      background: rgba(255,255,255,0.09);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width .35s ease;
+    }
+
+    .game-card {
+      padding: clamp(26px, 4vw, 46px);
+    }
+
+    .mission-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .mission-kicker {
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mission-header h2 {
+      margin-top: 9px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.95;
+    }
+
+    .level-tag {
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.35);
+      padding: 11px 13px;
+      color: rgba(246,244,239,0.72);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .sentence-box {
+      border: 1px solid rgba(196,164,90,0.23);
+      background: rgba(5,13,26,0.42);
+      padding: clamp(24px, 4vw, 38px);
+    }
+
+    .sentence-box span {
+      display: block;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .sentence-box .prompt {
+      font-size: clamp(30px, 4.2vw, 56px);
+      font-weight: 800;
+      line-height: 1.08;
+    }
+
+    .sentence-box .translation {
+      margin-top: 18px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .option {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.045);
+      color: var(--off-white);
+      padding: 20px;
+      transition: .22s ease;
+      text-align: left;
+    }
+
+    .option:hover:not(:disabled) {
+      border-color: rgba(196,164,90,0.55);
+      background: rgba(255,255,255,0.085);
+      transform: translateY(-1px);
+    }
+
+    .option strong {
+      font-size: 20px;
+      letter-spacing: 0.08em;
+    }
+
+    .option.correct {
+      border-color: rgba(136,212,152,0.75);
+      background: rgba(136,212,152,0.13);
+    }
+
+    .option.wrong {
+      border-color: rgba(231,138,138,0.75);
+      background: rgba(231,138,138,0.13);
+    }
+
+    .option.muted {
+      opacity: 0.42;
+      background: rgba(255,255,255,0.018);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 22px;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.45);
+      padding: 22px;
+      animation: fadeUp .3s ease both;
+    }
+
+    .feedback.show {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .feedback strong {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .feedback.correct strong { color: var(--green); }
+    .feedback.wrong strong { color: var(--red); }
+
+    .feedback p {
+      color: rgba(246,244,239,0.78);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .next-btn, .small-btn, .reset-btn {
+      border: 1px solid rgba(196,164,90,0.48);
+      background: var(--gold-light);
+      color: #07111F;
+      padding: 13px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      transition: .22s ease;
+      white-space: nowrap;
+    }
+
+    .next-btn:hover, .small-btn:hover, .reset-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 14px;
+    }
+
+    .live-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .live-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 13px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .live-row:last-child { border-bottom: 0; }
+    .live-row strong { color: var(--off-white); }
+
+    .badge-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.035);
+      padding: 12px;
+      opacity: .55;
+    }
+
+    .badge.unlocked {
+      border-color: rgba(196,164,90,0.35);
+      background: rgba(196,164,90,0.10);
+      opacity: 1;
+    }
+
+    .badge .icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      flex: 0 0 auto;
+    }
+
+    .badge strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .badge span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .open-vault {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      color: var(--off-white);
+      padding: 21px;
+      text-align: left;
+      transition: .22s ease;
+    }
+
+    .open-vault:hover {
+      border-color: rgba(196,164,90,0.45);
+      background: rgba(255,255,255,0.085);
+    }
+
+    .open-vault span {
+      display: block;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .open-vault strong {
+      font-size: 16px;
+    }
+
+    .final-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .final-card, .review-card {
+      padding: clamp(26px, 4vw, 46px);
+    }
+
+    .final-card h2 {
+      margin-top: 12px;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.9;
+    }
+
+    .final-card p {
+      margin-top: 20px;
+      color: rgba(246,244,239,0.74);
+      line-height: 1.8;
+    }
+
+    .final-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .final-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 30px;
+    }
+
+    .ghost-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      color: var(--off-white);
+      padding: 13px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+      transition: .22s ease;
+    }
+
+    .ghost-btn:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-1px);
+    }
+
+    .mistake-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mistake {
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.35);
+      padding: 17px;
+    }
+
+    .mistake-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .mistake-question {
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .answer-tag {
+      border: 1px solid rgba(136,212,152,0.35);
+      background: rgba(136,212,152,0.11);
+      color: #C7F2D1;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .mistake p {
+      margin-top: 12px;
+      color: rgba(246,244,239,0.72);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(5,13,26,0.86);
+      backdrop-filter: blur(18px);
+      z-index: 20;
+      padding: 18px;
+    }
+
+    .modal.show {
+      display: block;
+      animation: fadeUp .26s ease both;
+    }
+
+    .modal-box {
+      width: min(1160px, 100%);
+      height: 100%;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      background: #07111F;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h2 {
+      font-size: 36px;
+    }
+
+    .modal-content {
+      padding: 22px;
+      overflow-y: auto;
+    }
+
+    .study-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .study-card {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.052);
+      padding: 20px;
+      transition: .22s ease;
+    }
+
+    .study-card:hover {
+      border-color: rgba(196,164,90,0.45);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .study-word {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .study-word strong {
+      font-size: 25px;
+      letter-spacing: 0.08em;
+    }
+
+    .study-word span {
+      color: var(--gold-light);
+      font-size: 13px;
+    }
+
+    .study-card .label {
+      margin-top: 18px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .study-card p {
+      margin-top: 9px;
+      color: rgba(246,244,239,0.75);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .study-example {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      background: rgba(5,13,26,0.38);
+      padding: 13px;
+      color: rgba(246,244,239,0.76);
+      font-size: 13px;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    @media (max-width: 1000px) {
+      .topbar, .intro-grid, .game-layout, .final-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .score-panel {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .study-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100% - 22px, 1220px);
+        padding-top: 20px;
+      }
+
+      .button-grid, .options, .word-grid, .final-stats, .study-grid, .score-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-header, .feedback.show, .modal-head {
+        flex-direction: column;
+      }
+
+      .level-tag {
+        white-space: normal;
+      }
+
+      .modal {
+        padding: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="app">
+    <header class="topbar">
+      <section>
+        <div class="eyebrow">✦ MD Talk Memory Game</div>
+        <h1>Question Words</h1>
+        <p class="subtitle">
+          A sophisticated memorization game designed to help students recognize, choose and internalize English question words through fast decisions, immediate feedback and review cards.
+        </p>
+      </section>
 
-<header class="site-header">
-  <a class="brand" href="#">MD Talk</a>
-  <span class="lesson-tag">Grammar · Self-Study</span>
-</header>
+      <section class="score-panel" aria-label="Score panel">
+        <div class="stat"><span>Score</span><strong id="score">0</strong></div>
+        <div class="stat"><span>Streak</span><strong id="streak">0</strong></div>
+        <div class="stat"><span>Mastery</span><strong id="mastery">0%</strong></div>
+      </section>
+    </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="geo geo-ring-1"></div>
-  <div class="geo geo-ring-2"></div>
-  <div class="geo geo-diamond"></div>
-  <div class="geo geo-line"></div>
-  <p class="hero-overline">Foundation Grammar</p>
-  <h1 class="hero-title">The Verb <em>To Be</em></h1>
-  <div class="hero-divider"></div>
-  <p class="hero-desc">Study the slides at your own pace, then test yourself with interactive multiple-choice exercises.</p>
-  <div class="scroll-cta" onclick="document.querySelector('.slides-section').scrollIntoView({behavior:'smooth'})">Begin</div>
-</section>
+    <section id="introScreen" class="screen active">
+      <div class="intro-grid">
+        <article class="hero-card">
+          <div class="hero-icon">?</div>
+          <h2>Train recognition before translation.</h2>
+          <p>
+            The student will not only translate question words. They will connect each word to its communicative function: person, place, time, reason, quantity, duration, frequency, distance, possession and choice.
+          </p>
 
-<!-- SLIDES -->
-<section class="slides-section">
-  <p class="section-label" data-reveal>Explanation</p>
-  <h2 class="section-title" data-reveal>Study the slides at your own pace</h2>
-
-  <div class="slider-outer" data-reveal>
-    <button class="arrow-btn prev" id="prev-btn" disabled>&#8592;</button>
-    <button class="arrow-btn next" id="next-btn">&#8594;</button>
-
-    <div class="slider-track-wrap">
-      <div class="slider-track" id="slider-track">
-
-        <!-- SLIDE 1 -->
-        <div class="slide-card">
-          <span class="slide-num">01</span>
-          <p class="slide-tag">Introduction</p>
-          <h3 class="slide-title">What is the verb <em>to be</em>?</h3>
-          <div class="slide-body">
-            <p>The verb <strong>to be</strong> is the most important verb in English. It is used to describe <strong>identity, professions, nationalities, characteristics, states,</strong> and <strong>locations</strong>.</p>
-            <p>In the present simple, it has <strong>three forms</strong> that change according to the subject:</p>
-            <table class="grammar-table">
-              <thead><tr><th>Subject</th><th>Form</th><th>Contraction</th></tr></thead>
-              <tbody>
-                <tr><td>I</td><td class="hl">am</td><td>'m &nbsp;→&nbsp; I'm</td></tr>
-                <tr><td>You</td><td class="hl">are</td><td>'re &nbsp;→&nbsp; You're</td></tr>
-                <tr><td>He / She / It</td><td class="hl">is</td><td>'s &nbsp;→&nbsp; She's / He's</td></tr>
-                <tr><td>We / You / They</td><td class="hl">are</td><td>'re &nbsp;→&nbsp; We're / They're</td></tr>
-              </tbody>
-            </table>
-            <div class="note-box"><strong>Note:</strong> Contractions are very common in spoken English and informal writing. In formal contexts, the full form is preferred.</div>
+          <div class="button-grid">
+            <button class="btn primary" onclick="startGame('guided')">
+              <span class="label">Guided Mode</span>
+              <span class="note">Ordered progression: foundation → meaning → precision → challenge.</span>
+            </button>
+            <button class="btn secondary" onclick="startGame('challenge')">
+              <span class="label">Challenge Mode</span>
+              <span class="note">Random order for stronger recall and memory pressure.</span>
+            </button>
           </div>
-        </div>
+        </article>
 
-        <!-- SLIDE 2 -->
-        <div class="slide-card">
-          <span class="slide-num">02</span>
-          <p class="slide-tag">Affirmative Form</p>
-          <h3 class="slide-title">Affirmative Sentences</h3>
-          <div class="slide-body">
-            <div class="formula">Subject &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; complement</div>
-            <p>In affirmative sentences, the verb <strong>to be</strong> follows the subject directly. No other verb is needed.</p>
-            <div class="example-box"><div class="ex-en">I am a teacher.</div><div class="ex-pt">Eu sou professor(a).</div></div>
-            <div class="example-box"><div class="ex-en">She is very talented.</div><div class="ex-pt">Ela é muito talentosa.</div></div>
-            <div class="example-box"><div class="ex-en">They are from Brazil.</div><div class="ex-pt">Eles são do Brasil.</div></div>
-            <div class="example-box"><div class="ex-en">The book is on the table.</div><div class="ex-pt">O livro está sobre a mesa.</div></div>
-            <p>Notice how <em>is</em> is used with <strong>he, she, it</strong> — all singular third-person subjects.</p>
+        <aside class="vault">
+          <div class="side-card">
+            <div class="side-title"><span>Memory Vault</span><span>14 Cards</span></div>
+            <div class="word-grid" id="miniWordGrid"></div>
           </div>
-        </div>
 
-        <!-- SLIDE 3 -->
-        <div class="slide-card">
-          <span class="slide-num">03</span>
-          <p class="slide-tag">Negative Form</p>
-          <h3 class="slide-title">Negative Sentences</h3>
-          <div class="slide-body">
-            <div class="formula">Subject &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; <strong>not</strong> &nbsp;+&nbsp; complement</div>
-            <p>To form the negative, simply add <strong>not</strong> after the verb <em>to be</em>.</p>
-            <table class="grammar-table">
-              <thead><tr><th>Full Form</th><th>Contraction</th></tr></thead>
-              <tbody>
-                <tr><td>I am not</td><td class="hl">I'm not</td></tr>
-                <tr><td>You are not</td><td class="hl">You aren't &nbsp;/&nbsp; You're not</td></tr>
-                <tr><td>He / She / It is not</td><td class="hl">He isn't &nbsp;/&nbsp; She's not</td></tr>
-                <tr><td>We / They are not</td><td class="hl">We aren't &nbsp;/&nbsp; They're not</td></tr>
-              </tbody>
-            </table>
-            <div class="example-box"><div class="ex-en">I'm not ready yet.</div><div class="ex-pt">Eu ainda não estou pronto(a).</div></div>
-            <div class="example-box"><div class="ex-en">They aren't at home.</div><div class="ex-pt">Eles não estão em casa.</div></div>
-            <div class="note-box"><strong>Attention:</strong> <em>I am not</em> has only one contraction: <em>I'm not</em>. The form <em>amn't</em> does not exist in standard English.</div>
+          <div class="teacher-note">
+            <strong>Teacher Note</strong>
+            Use this game after presenting the meaning of each word. Then ask the student to explain why the correct answer is correct. That final step transforms recognition into active language awareness.
           </div>
-        </div>
+        </aside>
+      </div>
+    </section>
 
-        <!-- SLIDE 4 -->
-        <div class="slide-card">
-          <span class="slide-num">04</span>
-          <p class="slide-tag">Interrogative Form</p>
-          <h3 class="slide-title">Questions with <em>To Be</em></h3>
-          <div class="slide-body">
-            <div class="formula">Am / Is / Are &nbsp;+&nbsp; Subject &nbsp;+&nbsp; complement &nbsp;?</div>
-            <p>In yes/no questions, the verb <strong>to be</strong> moves <em>before</em> the subject. No auxiliary verb is needed.</p>
-            <div class="example-box"><div class="ex-en">Are you ready?</div><div class="ex-pt">Você está pronto(a)?</div></div>
-            <div class="example-box"><div class="ex-en">Is she your sister?</div><div class="ex-pt">Ela é sua irmã?</div></div>
-            <p>For <strong>WH-questions</strong>, the question word comes first:</p>
-            <div class="formula">WH-word &nbsp;+&nbsp; am / is / are &nbsp;+&nbsp; Subject &nbsp;?</div>
-            <div class="example-box"><div class="ex-en">Where are you from?</div><div class="ex-pt">De onde você é?</div></div>
-            <div class="example-box"><div class="ex-en">What is your name?</div><div class="ex-pt">Qual é o seu nome?</div></div>
+    <section id="gameScreen" class="screen">
+      <div class="game-layout">
+        <section>
+          <div class="progress-shell"><div class="progress-bar" id="progressBar"></div></div>
+
+          <article class="game-card">
+            <div class="mission-header">
+              <div>
+                <p class="mission-kicker" id="missionKicker">Mission 1 / 16</p>
+                <h2>Complete the question</h2>
+              </div>
+              <div class="level-tag" id="levelTag">Foundation · Guided</div>
+            </div>
+
+            <div class="sentence-box">
+              <span>Sentence</span>
+              <div class="prompt" id="promptText">____ is your name?</div>
+              <div class="translation" id="translationText">Qual é o seu nome?</div>
+            </div>
+
+            <div class="options" id="optionsBox"></div>
+
+            <div class="feedback" id="feedbackBox">
+              <div>
+                <strong id="feedbackTitle">Correct</strong>
+                <p id="feedbackText">Use WHAT to ask for information, names, things or ideas.</p>
+              </div>
+              <button class="next-btn" onclick="nextMission()" id="nextButton">Next</button>
+            </div>
+          </article>
+        </section>
+
+        <aside class="sidebar">
+          <div class="side-card">
+            <div class="side-title"><span>Live Performance</span><span>●</span></div>
+            <div class="live-list">
+              <div class="live-row"><span>Correct</span><strong id="correctLive">0</strong></div>
+              <div class="live-row"><span>Mistakes</span><strong id="mistakesLive">0</strong></div>
+              <div class="live-row"><span>Best streak</span><strong id="bestStreakLive">0</strong></div>
+            </div>
           </div>
-        </div>
 
-        <!-- SLIDE 5 -->
-        <div class="slide-card">
-          <span class="slide-num">05</span>
-          <p class="slide-tag">Key Uses</p>
-          <h3 class="slide-title">When to Use <em>To Be</em></h3>
-          <div class="slide-body">
-            <table class="grammar-table">
-              <thead><tr><th>Use</th><th>Example</th></tr></thead>
-              <tbody>
-                <tr><td>Identity / Name</td><td class="hl">I am Maria.</td></tr>
-                <tr><td>Profession</td><td class="hl">He is an engineer.</td></tr>
-                <tr><td>Nationality / Origin</td><td class="hl">She is Italian.</td></tr>
-                <tr><td>Characteristic</td><td class="hl">The film is boring.</td></tr>
-                <tr><td>State / Feeling</td><td class="hl">We are tired.</td></tr>
-                <tr><td>Location</td><td class="hl">The keys are on the desk.</td></tr>
-                <tr><td>Age</td><td class="hl">My brother is 25 years old.</td></tr>
-              </tbody>
-            </table>
-            <div class="note-box"><strong>Remember:</strong> In Portuguese, <em>ser</em> and <em>estar</em> are two separate verbs. In English, <em>to be</em> covers both — so the choice is always about <strong>which form</strong> to use, not which verb.</div>
+          <div class="side-card">
+            <div class="side-title"><span>Badges</span><span>🏆</span></div>
+            <div class="badge-list" id="badgeList"></div>
           </div>
-        </div>
 
-      </div><!-- /slider-track -->
+          <button class="open-vault" onclick="openVault()">
+            <span>Open</span>
+            <strong>Study Cards</strong>
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="final-grid">
+        <article class="final-card">
+          <div class="hero-icon">🏆</div>
+          <p class="mission-kicker">Session Complete</p>
+          <h2 id="finalTitle">Excellent recall.</h2>
+          <p id="finalText">Final score: 0. The student got 0 out of 16 missions correct.</p>
+
+          <div class="final-stats">
+            <div class="stat"><span>Mastery</span><strong id="finalMastery">0%</strong></div>
+            <div class="stat"><span>Best Streak</span><strong id="finalBestStreak">0</strong></div>
+            <div class="stat"><span>Badges</span><strong id="finalBadges">0</strong></div>
+          </div>
+
+          <div class="final-actions">
+            <button class="small-btn" onclick="startGame('challenge')">Play Again</button>
+            <button class="ghost-btn" onclick="resetGame()">Reset</button>
+            <button class="ghost-btn" onclick="openVault()">Review Cards</button>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <p class="mission-kicker">Personalized Review</p>
+          <h2 style="font-size:42px;margin-top:10px;">What to review next</h2>
+          <div class="mistake-list" id="mistakeList"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <section class="modal" id="vaultModal" aria-label="Study cards modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <p class="mission-kicker">Memory Vault</p>
+          <h2>Question Word Study Cards</h2>
+        </div>
+        <button class="ghost-btn" onclick="closeVault()">Close</button>
+      </div>
+      <div class="modal-content">
+        <div class="study-grid" id="studyGrid"></div>
+      </div>
     </div>
+  </section>
 
-    <div class="progress-row" id="progress-dots"></div>
-    <div class="slide-counter" id="slide-counter">1 / 5</div>
-  </div>
+  <script>
+    const questionWords = [
+      { word: "WHAT", asks: "information, things, actions or ideas", pt: "o quê / qual", clue: "Think: object, idea, activity.", example: "What do you do after class?" },
+      { word: "WHERE", asks: "place or location", pt: "onde", clue: "Think: place, room, city, hospital, clinic.", example: "Where does the patient live?" },
+      { word: "WHEN", asks: "time, date or moment", pt: "quando", clue: "Think: clock, calendar, schedule.", example: "When is your next appointment?" },
+      { word: "WHY", asks: "reason or cause", pt: "por que", clue: "Think: reason, explanation, cause.", example: "Why did you choose this specialty?" },
+      { word: "WHO", asks: "a person", pt: "quem", clue: "Think: person, doctor, student, patient.", example: "Who is your English teacher?" },
+      { word: "WHOSE", asks: "possession or ownership", pt: "de quem", clue: "Think: owner, belonging, possession.", example: "Whose notebook is this?" },
+      { word: "WHICH", asks: "choice from a limited group", pt: "qual / quais", clue: "Think: option A or option B.", example: "Which option is better for you?" },
+      { word: "HOW", asks: "manner, method, condition or quality", pt: "como", clue: "Think: process, condition, way.", example: "How are you feeling today?" },
+      { word: "HOW MANY", asks: "quantity with countable nouns", pt: "quantos / quantas", clue: "Think: numbers + plural countable things.", example: "How many classes do you have this week?" },
+      { word: "HOW MUCH", asks: "quantity, price or uncountable nouns", pt: "quanto / quanta / quanto custa", clue: "Think: money, water, time as amount, information.", example: "How much time do you need?" },
+      { word: "HOW LONG", asks: "duration or length of time", pt: "por quanto tempo / quanto tempo", clue: "Think: duration from start to finish.", example: "How long have you studied English?" },
+      { word: "HOW OFTEN", asks: "frequency", pt: "com que frequência", clue: "Think: always, usually, sometimes, once a week.", example: "How often do you review vocabulary?" },
+      { word: "HOW FAR", asks: "distance", pt: "quão longe / qual a distância", clue: "Think: kilometers, distance, location gap.", example: "How far is the hospital from here?" },
+      { word: "HOW OLD", asks: "age", pt: "quantos anos", clue: "Think: age of a person, building, object, or institution.", example: "How old is your son?" }
+    ];
 
-  <div class="go-quiz-wrap">
-    <button class="go-quiz-btn" id="go-quiz-btn"
-      onclick="document.querySelector('.quiz-section').scrollIntoView({behavior:'smooth'})">
-      Go to Exercise ↓
-    </button>
-  </div>
-</section>
+    const missions = [
+      { id: 1, level: "Foundation", prompt: "____ is your name?", answer: "WHAT", options: ["WHAT", "WHO", "WHERE", "WHEN"], explanation: "Use WHAT to ask for information, names, things or ideas.", translation: "Qual é o seu nome?" },
+      { id: 2, level: "Foundation", prompt: "____ are you from?", answer: "WHERE", options: ["WHEN", "WHERE", "WHY", "WHOSE"], explanation: "Use WHERE to ask about place or origin.", translation: "De onde você é?" },
+      { id: 3, level: "Foundation", prompt: "____ is your appointment?", answer: "WHEN", options: ["WHEN", "WHY", "WHICH", "HOW"], explanation: "Use WHEN to ask about time, date or moment.", translation: "Quando é sua consulta?" },
+      { id: 4, level: "Foundation", prompt: "____ is your favorite doctor?", answer: "WHO", options: ["WHO", "WHAT", "WHOSE", "WHERE"], explanation: "Use WHO when the answer is a person.", translation: "Quem é seu médico favorito?" },
+      { id: 5, level: "Meaning", prompt: "____ did you cancel the class?", answer: "WHY", options: ["WHY", "WHEN", "WHERE", "WHICH"], explanation: "Use WHY to ask for the reason or cause of something.", translation: "Por que você cancelou a aula?" },
+      { id: 6, level: "Meaning", prompt: "____ phone is ringing?", answer: "WHOSE", options: ["WHO", "WHOSE", "WHICH", "WHAT"], explanation: "Use WHOSE to ask about possession or ownership.", translation: "De quem é o telefone que está tocando?" },
+      { id: 7, level: "Meaning", prompt: "____ course do you prefer: Medical English or Business English?", answer: "WHICH", options: ["WHAT", "WHICH", "WHY", "HOW"], explanation: "Use WHICH when there is a limited set of options.", translation: "Qual curso você prefere: inglês médico ou inglês para negócios?" },
+      { id: 8, level: "Meaning", prompt: "____ are you feeling after the night shift?", answer: "HOW", options: ["HOW", "WHAT", "WHERE", "WHO"], explanation: "Use HOW to ask about condition, manner, process or quality.", translation: "Como você está se sentindo depois do plantão noturno?" },
+      { id: 9, level: "Precision", prompt: "____ patients did you see today?", answer: "HOW MANY", options: ["HOW MUCH", "HOW MANY", "HOW OFTEN", "HOW LONG"], explanation: "Use HOW MANY with countable plural nouns, such as patients, books, classes, exams.", translation: "Quantos pacientes você atendeu hoje?" },
+      { id: 10, level: "Precision", prompt: "____ water do you drink every day?", answer: "HOW MUCH", options: ["HOW MANY", "HOW MUCH", "HOW FAR", "HOW OLD"], explanation: "Use HOW MUCH with uncountable nouns, prices and amounts.", translation: "Quanta água você bebe todos os dias?" },
+      { id: 11, level: "Precision", prompt: "____ have you worked at this hospital?", answer: "HOW LONG", options: ["HOW OFTEN", "HOW LONG", "HOW FAR", "HOW MUCH"], explanation: "Use HOW LONG to ask about duration.", translation: "Há quanto tempo você trabalha neste hospital?" },
+      { id: 12, level: "Precision", prompt: "____ do you practice English?", answer: "HOW OFTEN", options: ["HOW OLD", "HOW OFTEN", "HOW FAR", "HOW LONG"], explanation: "Use HOW OFTEN to ask about frequency.", translation: "Com que frequência você pratica inglês?" },
+      { id: 13, level: "Challenge", prompt: "____ is your clinic from the airport?", answer: "HOW FAR", options: ["HOW FAR", "HOW LONG", "WHERE", "WHEN"], explanation: "Use HOW FAR to ask about distance.", translation: "A que distância sua clínica fica do aeroporto?" },
+      { id: 14, level: "Challenge", prompt: "____ is your daughter? She looks very young.", answer: "HOW OLD", options: ["HOW LONG", "HOW MANY", "HOW OLD", "WHOSE"], explanation: "Use HOW OLD to ask about age.", translation: "Quantos anos tem sua filha? Ela parece muito jovem." },
+      { id: 15, level: "Challenge", prompt: "____ did the patient arrive late? Because of traffic.", answer: "WHY", options: ["WHEN", "WHY", "WHERE", "HOW MANY"], explanation: "The answer gives a reason, so the correct question word is WHY.", translation: "Por que o paciente chegou atrasado? Por causa do trânsito." },
+      { id: 16, level: "Challenge", prompt: "____ document should I sign, this one or that one?", answer: "WHICH", options: ["WHOSE", "WHICH", "WHAT", "WHY"], explanation: "There are two specific options, so WHICH is more precise than WHAT.", translation: "Qual documento eu devo assinar, este ou aquele?" }
+    ];
 
-<!-- QUIZ -->
-<section class="quiz-section">
-  <p class="section-label" data-reveal>Practice</p>
-  <h2 class="section-title" data-reveal>Multiple-Choice Exercises</h2>
-  <div class="quiz-wrapper" id="quiz-container"></div>
-  <div class="score-panel" id="score-panel">
-    <p class="score-label">Your Score</p>
-    <div class="score-number" id="score-num">0</div>
-    <div class="score-denom" id="score-denom">out of 8</div>
-    <p class="score-msg" id="score-msg"></p>
-    <button class="retry-btn" onclick="resetQuiz()">Try Again</button>
-  </div>
-</section>
+    const badges = [
+      { name: "First Spark", icon: "✦", text: "Answered your first mission", test: () => state.totalAnswered >= 1 },
+      { name: "Memory Streak", icon: "⚡", text: "Reached a 3-answer streak", test: () => state.bestStreak >= 3 },
+      { name: "Precision Mode", icon: "◎", text: "Got 8 answers correct", test: () => state.correct >= 8 },
+      { name: "Question Master", icon: "🏆", text: "Perfect score", test: () => state.correct === state.rounds.length && state.rounds.length > 0 }
+    ];
 
-<footer>
-  <span class="brand-f">Instituto MD Talk</span>
-  <span class="copy">Grammar · Self-Study Series</span>
-</footer>
+    let state = {
+      started: false,
+      mode: "guided",
+      rounds: [...missions],
+      index: 0,
+      selected: null,
+      answered: false,
+      correct: 0,
+      streak: 0,
+      bestStreak: 0,
+      mistakes: [],
+      totalAnswered: 0
+    };
 
-<script>
-/* ═══ SLIDER ═══ */
-const TOTAL = 5;
-let current = 0;
-const track   = document.getElementById('slider-track');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const counter = document.getElementById('slide-counter');
-const goQuiz  = document.getElementById('go-quiz-btn');
-const dotsWrap= document.getElementById('progress-dots');
+    function $(id) {
+      return document.getElementById(id);
+    }
 
-for (let i = 0; i < TOTAL; i++) {
-  const d = document.createElement('button');
-  d.className = 'pdot' + (i === 0 ? ' active' : '');
-  d.addEventListener('click', () => goTo(i));
-  dotsWrap.appendChild(d);
-}
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
 
-function goTo(n) {
-  n = Math.max(0, Math.min(TOTAL - 1, n));
-  current = n;
-  track.style.transform = `translateX(-${current * 100}%)`;
-  document.querySelectorAll('.pdot').forEach((d,i) => d.classList.toggle('active', i === current));
-  counter.textContent = `${current + 1} / ${TOTAL}`;
-  prevBtn.disabled = current === 0;
-  nextBtn.disabled = current === TOTAL - 1;
-  if (current === TOTAL - 1) goQuiz.classList.add('show');
-}
+    function renderMiniWords() {
+      const html = questionWords.slice(0, 12).map(item => `
+        <div class="mini-word">
+          <strong>${item.word}</strong>
+          <span>${item.pt}</span>
+        </div>
+      `).join("");
+      $("miniWordGrid").innerHTML = html;
+    }
 
-prevBtn.addEventListener('click', () => goTo(current - 1));
-nextBtn.addEventListener('click', () => goTo(current + 1));
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') goTo(current - 1);
-  if (e.key === 'ArrowRight') goTo(current + 1);
-});
-let tx = 0;
-track.addEventListener('touchstart', e => { tx = e.changedTouches[0].clientX; }, {passive:true});
-track.addEventListener('touchend',   e => {
-  const dx = e.changedTouches[0].clientX - tx;
-  if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-});
+    function renderStudyCards() {
+      const html = questionWords.map(item => `
+        <article class="study-card">
+          <div class="study-word">
+            <div>
+              <strong>${item.word}</strong><br>
+              <span>${item.pt}</span>
+            </div>
+            <span>?</span>
+          </div>
+          <div class="label">Use it to ask about</div>
+          <p>${item.asks}</p>
+          <div class="label">Memory clue</div>
+          <p>${item.clue}</p>
+          <div class="study-example">“${item.example}”</div>
+        </article>
+      `).join("");
+      $("studyGrid").innerHTML = html;
+    }
 
-/* ═══ QUIZ ═══ */
-const questions = [
-  { text:'She _____ very happy today.', options:['am','is','are','be'], correct:1,
-    feedback:'<strong>Correct!</strong> We use <em>is</em> with he, she, and it.',
-    wrongFeedback:'The correct answer is <strong>is</strong>. With <em>she</em>, always use <em>is</em>.' },
-  { text:'My parents _____ at home right now.', options:['am','is','are','was'], correct:2,
-    feedback:'<strong>Correct!</strong> <em>Are</em> is used with plural subjects. "My parents" = they.',
-    wrongFeedback:'The correct answer is <strong>are</strong>. "My parents" is plural — use <em>are</em>.' },
-  { text:'"_____ you from São Paulo?"', options:['Am','Is','Are','Do'], correct:2,
-    feedback:'<strong>Correct!</strong> In questions with <em>you</em>, we use <em>Are you…?</em>',
-    wrongFeedback:'The correct answer is <strong>Are</strong>. With <em>you</em>, the question form is <em>Are you…?</em>' },
-  { text:'The weather _____ not very good today.', options:["isn't","aren't","am not","doesn't"], correct:0,
-    feedback:'<strong>Correct!</strong> "The weather" is singular — we use <em>isn\'t</em> (is not).',
-    wrongFeedback:'The correct answer is <strong>isn\'t</strong>. "The weather" is singular → <em>is not / isn\'t</em>.' },
-  { text:'I _____ so tired after the long trip.', options:['is','are','am','be'], correct:2,
-    feedback:'<strong>Correct!</strong> With <em>I</em>, we always use <em>am</em>.',
-    wrongFeedback:'The correct answer is <strong>am</strong>. With <em>I</em>, the only form is <em>am</em>.' },
-  { text:'"Where _____ the nearest supermarket?"', options:['am','is','are','does'], correct:1,
-    feedback:'<strong>Correct!</strong> "The nearest supermarket" is singular — we use <em>is</em> to ask about location.',
-    wrongFeedback:'The correct answer is <strong>is</strong>. Singular noun → <em>Where is…?</em>' },
-  { text:'We _____ really excited about the trip.', options:['is','am','are','was'], correct:2,
-    feedback:'<strong>Correct!</strong> <em>We</em> always takes <em>are</em>.',
-    wrongFeedback:'The correct answer is <strong>are</strong>. With <em>we</em>, always use <em>are</em>.' },
-  { text:'The children _____ in the garden playing football.', options:['is','am','are','be'], correct:2,
-    feedback:'<strong>Correct!</strong> "The children" is plural — <em>are</em> is required.',
-    wrongFeedback:'The correct answer is <strong>are</strong>. "The children" is plural → <em>are</em>.' }
-];
+    function renderBadges() {
+      const html = badges.map(badge => {
+        const unlocked = badge.test();
+        return `
+          <div class="badge ${unlocked ? 'unlocked' : ''}">
+            <div class="icon">${unlocked ? badge.icon : '🔒'}</div>
+            <div>
+              <strong>${badge.name}</strong>
+              <span>${badge.text}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+      $("badgeList").innerHTML = html;
+    }
 
-let answered, score;
+    function updateStats() {
+      const score = state.correct * 100 + state.bestStreak * 20;
+      const mastery = state.rounds.length ? Math.round((state.correct / state.rounds.length) * 100) : 0;
+      state.totalAnswered = state.answered ? state.index + 1 : state.index;
 
-function buildQuiz() {
-  const c = document.getElementById('quiz-container');
-  c.innerHTML = '';
-  answered = new Array(questions.length).fill(false);
-  score = 0;
-  document.getElementById('score-panel').classList.remove('show');
-  const letters = ['A','B','C','D'];
-  questions.forEach((q, qi) => {
-    const card = document.createElement('div');
-    card.className = 'quiz-card';
-    const optsHTML = q.options.map((opt, oi) =>
-      `<button class="option-btn" onclick="pick(${qi},${oi})" id="o-${qi}-${oi}">
-        <span class="opt-letter">${letters[oi]}</span>${opt}
-      </button>`).join('');
-    card.innerHTML = `
-      <p class="q-number">Question ${qi+1} of ${questions.length}</p>
-      <p class="q-text">${q.text.replace('_____','<span class="q-blank">_____</span>')}</p>
-      <div class="options-grid">${optsHTML}</div>
-      <div class="feedback" id="fb-${qi}"></div>`;
-    c.appendChild(card);
-    setTimeout(() => card.classList.add('visible'), qi * 75);
-  });
-}
+      $("score").textContent = score;
+      $("streak").textContent = state.streak;
+      $("mastery").textContent = mastery + "%";
+      $("correctLive").textContent = state.correct;
+      $("mistakesLive").textContent = state.mistakes.length;
+      $("bestStreakLive").textContent = state.bestStreak;
 
-function pick(qi, oi) {
-  if (answered[qi]) return;
-  answered[qi] = true;
-  const q = questions[qi];
-  for (let i=0;i<4;i++){ const b=document.getElementById(`o-${qi}-${i}`); if(b) b.disabled=true; }
-  const fb = document.getElementById('fb-'+qi);
-  if (oi === q.correct) {
-    score++;
-    document.getElementById(`o-${qi}-${oi}`).classList.add('correct');
-    fb.className='feedback show correct-fb'; fb.innerHTML=q.feedback;
-  } else {
-    document.getElementById(`o-${qi}-${oi}`).classList.add('wrong');
-    document.getElementById(`o-${qi}-${q.correct}`).classList.add('correct');
-    fb.className='feedback show wrong-fb'; fb.innerHTML=q.wrongFeedback;
-  }
-  if (answered.every(Boolean)) setTimeout(showScore, 700);
-}
+      renderBadges();
+    }
 
-function showScore() {
-  const panel = document.getElementById('score-panel');
-  document.getElementById('score-num').textContent = score;
-  document.getElementById('score-denom').textContent = `out of ${questions.length}`;
-  const pct = score / questions.length;
-  let msg = pct === 1
-    ? 'Perfect score! You have an excellent command of the verb <em>to be</em>.'
-    : pct >= .75
-    ? 'Well done! Review the items you missed and try once more.'
-    : pct >= .5
-    ? 'Good effort. Go back through the slides and focus on subject-verb agreement.'
-    : 'Keep going. Review the slides carefully and pay attention to each subject pronoun.';
-  document.getElementById('score-msg').innerHTML = msg;
-  panel.classList.add('show');
-  panel.scrollIntoView({behavior:'smooth', block:'center'});
-}
+    function setScreen(screenId) {
+      ["introScreen", "gameScreen", "finalScreen"].forEach(id => $(id).classList.remove("active"));
+      $(screenId).classList.add("active");
+    }
 
-function resetQuiz() {
-  buildQuiz();
-  document.getElementById('quiz-container').scrollIntoView({behavior:'smooth'});
-}
+    function startGame(mode) {
+      state = {
+        started: true,
+        mode,
+        rounds: mode === "challenge" ? shuffle(missions) : [...missions],
+        index: 0,
+        selected: null,
+        answered: false,
+        correct: 0,
+        streak: 0,
+        bestStreak: 0,
+        mistakes: [],
+        totalAnswered: 0
+      };
+      setScreen("gameScreen");
+      renderMission();
+      updateStats();
+    }
 
-buildQuiz();
+    function resetGame() {
+      state = {
+        started: false,
+        mode: "guided",
+        rounds: [...missions],
+        index: 0,
+        selected: null,
+        answered: false,
+        correct: 0,
+        streak: 0,
+        bestStreak: 0,
+        mistakes: [],
+        totalAnswered: 0
+      };
+      setScreen("introScreen");
+      updateStats();
+    }
 
-/* SCROLL REVEAL */
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} });
-},{threshold:.1});
-document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
-</script>
+    function renderMission() {
+      const current = state.rounds[state.index];
+      if (!current) {
+        renderFinal();
+        return;
+      }
+
+      const progress = ((state.index + (state.answered ? 1 : 0)) / state.rounds.length) * 100;
+      $("progressBar").style.width = progress + "%";
+      $("missionKicker").textContent = `Mission ${state.index + 1} / ${state.rounds.length}`;
+      $("levelTag").textContent = `${current.level} · ${state.mode === "challenge" ? "Random" : "Guided"}`;
+      $("promptText").textContent = current.prompt;
+      $("translationText").textContent = current.translation;
+      $("feedbackBox").className = "feedback";
+      $("feedbackTitle").textContent = "";
+      $("feedbackText").textContent = "";
+      $("nextButton").textContent = state.index + 1 === state.rounds.length ? "Finish" : "Next";
+
+      const html = current.options.map(option => `
+        <button class="option" onclick="chooseAnswer('${option.replace(/'/g, "\\'")}')">
+          <strong>${option}</strong>
+          <span>○</span>
+        </button>
+      `).join("");
+      $("optionsBox").innerHTML = html;
+      updateStats();
+    }
+
+    function chooseAnswer(option) {
+      if (state.answered) return;
+
+      const current = state.rounds[state.index];
+      state.selected = option;
+      state.answered = true;
+
+      const isCorrect = option === current.answer;
+
+      if (isCorrect) {
+        state.correct += 1;
+        state.streak += 1;
+        state.bestStreak = Math.max(state.bestStreak, state.streak);
+      } else {
+        state.streak = 0;
+        state.mistakes.push({ ...current, selected: option });
+      }
+
+      const optionButtons = Array.from(document.querySelectorAll(".option"));
+      optionButtons.forEach(button => {
+        const text = button.querySelector("strong").textContent;
+        button.disabled = true;
+        button.querySelector("span").textContent = "";
+
+        if (text === current.answer) {
+          button.classList.add("correct");
+          button.querySelector("span").textContent = "✓";
+        } else if (text === option && !isCorrect) {
+          button.classList.add("wrong");
+          button.querySelector("span").textContent = "✕";
+        } else {
+          button.classList.add("muted");
+        }
+      });
+
+      $("feedbackBox").className = "feedback show " + (isCorrect ? "correct" : "wrong");
+      $("feedbackTitle").textContent = isCorrect ? "Correct" : "Review this";
+      $("feedbackText").textContent = current.explanation;
+      $("progressBar").style.width = (((state.index + 1) / state.rounds.length) * 100) + "%";
+
+      updateStats();
+    }
+
+    function nextMission() {
+      state.index += 1;
+      state.selected = null;
+      state.answered = false;
+      renderMission();
+    }
+
+    function renderFinal() {
+      setScreen("finalScreen");
+      const score = state.correct * 100 + state.bestStreak * 20;
+      const mastery = Math.round((state.correct / state.rounds.length) * 100);
+      const badgeCount = badges.filter(b => b.test()).length;
+
+      let title = "Review mode needed.";
+      if (mastery >= 85) title = "Excellent recall.";
+      else if (mastery >= 60) title = "Good foundation.";
+
+      $("finalTitle").textContent = title;
+      $("finalText").innerHTML = `Final score: <strong style="color:var(--gold-light)">${score}</strong>. The student got <strong style="color:var(--off-white)">${state.correct}</strong> out of <strong style="color:var(--off-white)">${state.rounds.length}</strong> missions correct.`;
+      $("finalMastery").textContent = mastery + "%";
+      $("finalBestStreak").textContent = state.bestStreak;
+      $("finalBadges").textContent = badgeCount;
+
+      if (state.mistakes.length === 0) {
+        $("mistakeList").innerHTML = `
+          <div class="mistake" style="border-color:rgba(136,212,152,0.35); background:rgba(136,212,152,0.10);">
+            <div class="mistake-question">Perfect performance.</div>
+            <p>Move to oral production: ask the student to create 2 original questions with each question word.</p>
+          </div>
+        `;
+      } else {
+        $("mistakeList").innerHTML = state.mistakes.map(mistake => `
+          <div class="mistake">
+            <div class="mistake-top">
+              <div>
+                <div class="mistake-question">${mistake.prompt}</div>
+                <p>Your answer: <span style="color:var(--red)">${mistake.selected}</span></p>
+              </div>
+              <span class="answer-tag">${mistake.answer}</span>
+            </div>
+            <p>${mistake.explanation}</p>
+          </div>
+        `).join("");
+      }
+
+      updateStats();
+    }
+
+    function openVault() {
+      $("vaultModal").classList.add("show");
+    }
+
+    function closeVault() {
+      $("vaultModal").classList.remove("show");
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") closeVault();
+    });
+
+    renderMiniWords();
+    renderStudyCards();
+    renderBadges();
+    updateStats();
+  </script>
 </body>
 </html>
